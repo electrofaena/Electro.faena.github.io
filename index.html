@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableros Eléctricos Normados | Cotizador en Línea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2.5">
+                <div class="bg-gradient-to-tr from-blue-600 to-cyan-400 p-2 rounded-xl text-white font-bold text-base shadow-lg shadow-blue-500/20">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-base tracking-tight text-white">TABLEROS<span class="text-blue-500">PRO</span></span>
+                    <span class="block text-[10px] text-slate-400 font-medium">Normativa RIC / SEC - Certificado</span>
+                </div>
+            </div>
+            <a id="navWaBtn" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-emerald-600/20">
+                <i class="fa-brands fa-whatsapp text-sm"></i> <span class="hidden sm:inline">Contacto</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="border-b border-slate-800/80 px-4 py-6 text-center bg-slate-900/40">
+        <div class="max-w-xl mx-auto space-y-2">
+            <span class="bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider inline-block">
+                Fabricación & Arriendo de Tableros
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Cotiza tu Tablero de Faena o Control
+            </h1>
+            <p class="text-xs text-slate-400">
+                Todos nuestros equipos cuentan con **protocolo de prueba y certificación de Ingeniero Civil Eléctrico**.
+            </p>
+        </div>
+    </header>
+
+    <!-- App Body -->
+    <main class="flex-1 max-w-3xl w-full mx-auto p-4 space-y-6">
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-2xl space-y-5">
+
+            <!-- 1. Red -->
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">1. Tipo de Alimentación</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="systemType" value="1P" checked onchange="updateQuote()" class="peer sr-only">
+                        <div class="p-3.5 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 transition text-center space-y-1">
+                            <i class="fa-solid fa-plug text-xl text-slate-500 block"></i>
+                            <span class="font-bold text-xs text-slate-200">Monofásico (220V)</span>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer">
+                        <input type="radio" name="systemType" value="3P" onchange="updateQuote()" class="peer sr-only">
+                        <div class="p-3.5 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 transition text-center space-y-1">
+                            <i class="fa-solid fa-industry text-xl text-slate-500 block"></i>
+                            <span class="font-bold text-xs text-slate-200">Trifásico (380V)</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 2. Capacidad -->
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">2. Capacidad de Protección</label>
+                <div class="grid grid-cols-3 gap-2">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="amperage" value="32" checked onchange="updateQuote()" class="peer sr-only">
+                        <div class="p-2.5 text-center rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 font-bold text-xs transition">
+                            32A
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="amperage" value="40" onchange="updateQuote()" class="peer sr-only">
+                        <div class="p-2.5 text-center rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 font-bold text-xs transition">
+                            40A
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="amperage" value="63" onchange="updateQuote()" class="peer sr-only">
+                        <div class="p-2.5 text-center rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 font-bold text-xs transition">
+                            63A
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 3. Guardamotor / Motor -->
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">3. Módulo de Protección o Control de Motor</label>
+                <select id="motorOption" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                    <option value="NONE">Sin Motor (Solo distribución con enchufes industriales)</option>
+                    <option value="GM_1HP">Partidor con Guardamotor - Motor 1.0 HP</option>
+                    <option value="GM_2HP">Partidor con Guardamotor - Motor 2.0 HP</option>
+                    <option value="GM_3HP">Partidor con Guardamotor - Motor 3.0 HP</option>
+                    <option value="CTRL_1HP">Sistema de Mando Automatizado (Auto/Man) - Motor 1.0 HP</option>
+                    <option value="CTRL_2HP">Sistema de Mando Automatizado (Auto/Man) - Motor 2.0 HP</option>
+                    <option value="CTRL_3HP">Sistema de Mando Automatizado (Auto/Man) - Motor 3.0 HP</option>
+                </select>
+            </div>
+
+            <!-- 4. Modalidad -->
+            <div class="space-y-2 border-t border-slate-800 pt-4">
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">4. Modalidad del Servicio</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="serviceMode" value="BUY" checked onchange="updateQuote()" class="peer sr-only">
+                        <div class="p-3 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-emerald-500 peer-checked:bg-emerald-600/10 peer-checked:text-emerald-400 transition text-center font-bold text-xs">
+                            <i class="fa-solid fa-cart-shopping mr-1"></i> Comprar Tablero
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="serviceMode" value="RENT" onchange="updateQuote()" class="peer sr-only">
+                        <div class="p-3 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-purple-500 peer-checked:bg-purple-600/10 peer-checked:text-purple-400 transition text-center font-bold text-xs">
+                            <i class="fa-solid fa-calendar-days mr-1"></i> Arriendo Mensual
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Card de Cotización Resultante -->
+            <div class="bg-slate-950 rounded-xl p-5 border border-slate-800 space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
+                    <div>
+                        <h2 class="font-bold text-base text-white" id="resTitle">Tablero Monofásico 32A</h2>
+                        <p class="text-xs text-slate-400" id="resDesc">Compra de equipo nuevo - Gabinete IP65</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase block" id="resLabel">Precio (+IVA)</span>
+                        <span class="text-2xl font-black text-emerald-400 font-mono" id="resPrice">$0</span>
+                    </div>
+                </div>
+
+                <a id="waOrderBtn" href="#" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-xs shadow-xl shadow-emerald-600/20 active:scale-[0.98]">
+                    <i class="fa-brands fa-whatsapp text-base"></i> Solicitar Cotización Formal por WhatsApp
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 border-t border-slate-800 p-4 text-center text-[11px] text-slate-500">
+        SpA Tableros Eléctricos &copy; 2026 - Certificación & Ingeniería de Control.
+    </footer>
+
+    <script>
+        const WHATSAPP_NUM = "56912345678"; // Reemplazar por tu número real
+
+        function formatCLP(val) {
+            return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(val);
+        }
+
+        function updateQuote() {
+            const systemType = document.querySelector('input[name="systemType"]:checked').value;
+            const amperage = document.querySelector('input[name="amperage"]:checked').value;
+            const motorOption = document.getElementById('motorOption').value;
+            const serviceMode = document.querySelector('input[name="serviceMode"]:checked').value;
+
+            const is3P = (systemType === '3P');
+
+            let baseFull = 120000;
+            if (is3P) baseFull += 85000;
+            if (amperage === '40') baseFull += 25000;
+            if (amperage === '63') baseFull += 65000;
+
+            let motorTag = "";
+            if (motorOption.startsWith("GM_")) {
+                const hp = motorOption.split("_")[1];
+                baseFull += 55000;
+                motorTag = ` + Guardamotor ${hp}`;
+            } else if (motorOption.startsWith("CTRL_")) {
+                const hp = motorOption.split("_")[1];
+                baseFull += 115000;
+                motorTag = ` + Control Auto/Man ${hp}`;
+            }
+
+            let finalPrice = 0;
+            if (serviceMode === 'BUY') {
+                const saleNeto = baseFull / 0.65; // Margen público
+                finalPrice = saleNeto * 1.19; // +IVA
+            } else {
+                finalPrice = (baseFull * 0.35) * 1.19; // Arriendo +IVA
+            }
+
+            const title = `Tablero ${is3P ? 'Trifásico (380V)' : 'Monofásico (220V)'} ${amperage}A${motorTag}`;
+            const desc = `${serviceMode === 'BUY' ? 'Compra de equipo nuevo' : 'Arriendo Mensual'} - Formato IP65 Hermético`;
+
+            document.getElementById('resTitle').innerText = title;
+            document.getElementById('resDesc').innerText = desc;
+            document.getElementById('resLabel').innerText = serviceMode === 'BUY' ? 'Precio de Venta (+IVA)' : 'Arriendo Mensual (+IVA)';
+            document.getElementById('resPrice').innerText = formatCLP(finalPrice);
+
+            const msg = `Hola SpA Tableros, me interesa solicitar una cotización formal para:\n\n` +
+                `📌 *Producto:* ${title}\n` +
+                `📋 *Modalidad:* ${serviceMode === 'BUY' ? 'Compra' : 'Arriendo Mensual'}\n` +
+                `💰 *Valor Estimado:* ${formatCLP(finalPrice)} (+IVA)\n\n` +
+                `¿Me pueden enviar la cotización formal en PDF?`;
+
+            const waLink = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`;
+            document.getElementById('waOrderBtn').href = waLink;
+            document.getElementById('navWaBtn').href = waLink;
+        }
+
+        document.addEventListener('DOMContentLoaded', updateQuote);
+    </script>
+</body>
+</html>
