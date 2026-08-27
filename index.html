@@ -55,7 +55,7 @@
                 Cotiza tu Tablero de Faena o Control
             </h1>
             <p class="text-xs text-slate-400">
-                Todos nuestros equipos cuentan con <strong>protocolo de prueba y certificación de Ingeniero Civil Eléctrico</strong>.
+                Todos nuestros equipos cumplen estrictamente con <strong>Norma RIC N°02/10 SEC</strong> con protecciones independientes por circuito.
             </p>
         </div>
     </header>
@@ -116,11 +116,49 @@
                 </div>
             </div>
 
-            <!-- 3. Guardamotor / Motor -->
+            <!-- 3. Cantidad de Enchufes (Límite Normativo RIC) -->
+            <div class="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+                <div class="flex justify-between items-center">
+                    <label class="block text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-plug-circle-bolt text-blue-400"></i> 3. Cantidad de Salidas / Enchufes
+                    </label>
+                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
+                        <i class="fa-solid fa-shield-check"></i> Cumplimiento RIC N°02 / SEC
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Enchufes 220V Monofásicos -->
+                    <div>
+                        <label class="block text-[11px] text-slate-400 font-medium mb-1">Enchufes Monofásicos (220V - 16A Industrial)</label>
+                        <select id="publicSockets1P" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                            <option value="2">2 Enchufes 220V (1 Diferencial 30mA dedicado)</option>
+                            <option value="4" selected>4 Enchufes 220V (2 Diferenciales 30mA independientes)</option>
+                            <option value="6">6 Enchufes 220V (3 Diferenciales 30mA independientes)</option>
+                            <option value="8">8 Enchufes 220V (4 Diferenciales 30mA - Gabinete XL)</option>
+                        </select>
+                    </div>
+
+                    <!-- Enchufes 380V Trifásicos (Solo activo si es 3P) -->
+                    <div id="publicSockets3PWrapper">
+                        <label class="block text-[11px] text-slate-400 font-medium mb-1">Enchufes Trifásicos (380V - Industrial IP67)</label>
+                        <select id="publicSockets3P" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                            <option value="1" selected>1 Enchufe Trifásico 32A (1 Diferencial Tetrapolar)</option>
+                            <option value="2">2 Enchufes Trifásicos 32A (2 Diferenciales Tetrapolares)</option>
+                            <option value="3">3 Enchufes Trifásicos 32A (3 Diferenciales Tetrapolares - Gabinete XL)</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="text-[10px] text-slate-400 italic">
+                    * Normativa SEC exige máximo 2 a 3 enchufe por diferencial para prevenir caídas por fuga acumulada de herramientas.
+                </p>
+            </div>
+
+            <!-- 4. Guardamotor / Motor -->
             <div class="space-y-2">
-                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">3. Módulo de Protección o Mando de Motor</label>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">4. Módulo opcional de Protección / Mando de Motor</label>
                 <select id="publicMotorOption" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
-                    <option value="NONE">Sin Motor (Solo distribución con enchufes industriales)</option>
+                    <option value="NONE">Sin Mando Motor (Solo distribución de enchufes industriales)</option>
                     <option value="GM_1">Partidor Guardamotor Directo - Motor 1.0 HP (0.75 kW)</option>
                     <option value="GM_2">Partidor Guardamotor Directo - Motor 2.0 HP (1.5 kW)</option>
                     <option value="GM_3">Partidor Guardamotor Directo - Motor 3.0 HP (2.2 kW)</option>
@@ -128,11 +166,16 @@
                     <option value="CTRL_2">Sistema Mando Automatizado (Guardamotor + Contactor Auto/Man) - 2.0 HP</option>
                     <option value="CTRL_3">Sistema Mando Automatizado (Guardamotor + Contactor Auto/Man) - 3.0 HP</option>
                 </select>
+                <!-- Indicador Normativo de Restricción cuando hay Motor -->
+                <div id="publicMotorWarning" class="hidden p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-[11px] text-amber-300 flex items-start gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-0.5"></i>
+                    <span><strong>Nota RIC N°02 SEC:</strong> Al incluir mando para motor, se restringe la cantidad máxima de enchufes a 2 o 4 salidas para preservar el factor de simultaneidad, capacidad térmica y espacio DIN del gabinete.</span>
+                </div>
             </div>
 
-            <!-- 4. Modalidad -->
+            <!-- 5. Modalidad -->
             <div class="space-y-2 border-t border-slate-800 pt-4">
-                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">4. Modalidad del Servicio</label>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">5. Modalidad del Servicio</label>
                 <div class="grid grid-cols-2 gap-3">
                     <label class="cursor-pointer">
                         <input type="radio" name="publicServiceMode" value="BUY" checked onchange="updateQuote()" class="peer sr-only">
@@ -240,6 +283,27 @@
                             <option value="40">40 Amperes (Obra Estándar)</option>
                             <option value="63" id="admin63aOpt">63 Amperes (Distribución Pesada)</option>
                         </select>
+                    </div>
+
+                    <!-- Enchufes Monofásicos y Trifásicos -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Cant. Enchufes 220V</label>
+                            <select id="adminSockets1P" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                                <option value="2">2 Enchufes</option>
+                                <option value="4" selected>4 Enchufes</option>
+                                <option value="6">6 Enchufes</option>
+                                <option value="8">8 Enchufes</option>
+                            </select>
+                        </div>
+                        <div id="adminSockets3PBox">
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Cant. Enchufes 380V</label>
+                            <select id="adminSockets3P" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                                <option value="1" selected>1 Enchufe</option>
+                                <option value="2">2 Enchufes</option>
+                                <option value="3">3 Enchufes</option>
+                            </select>
+                        </div>
                     </div>
 
                     <!-- Módulo de Motor/Mando -->
@@ -370,7 +434,8 @@
             CABINETS: {
                 SMALL: { name: "Gabinete Metálico IP65 300x250x150", price: 31290, link: "https://www.ferrelectrica.cl/product/gabinete-tablero-metalico-300x250x150-ip65-1-puerta" },
                 MEDIUM: { name: "Gabinete Metálico IP65 400x300x200", price: 44890, link: "https://www.ferrelectrica.cl/product/gabinete-tablero-metalico-400x300x200-ip65-1-puerta" },
-                LARGE: { name: "Gabinete Metálico IP65 600x400x200", price: 83299, link: "https://www.ferrelectrica.cl/product/gabinete-tablero-metalico-600x400x200-ip65-1-puerta" }
+                LARGE: { name: "Gabinete Metálico IP65 600x400x200", price: 83299, link: "https://www.ferrelectrica.cl/product/gabinete-tablero-metalico-600x400x200-ip65-1-puerta" },
+                XL: { name: "Gabinete Metálico IP65 800x600x250 (Edición Faena Pesada)", price: 124500, link: "https://www.ferrelectrica.cl/product/gabinete-tablero-metalico-600x400x200-ip65-1-puerta" }
             },
             AUTOMATICS: {
                 "1P_32A": { name: "Termomagnético General 1P 32A 6kA Curva C", price: 3250, link: "https://www.ferrelectrica.cl/product/automatico-1x32a-6ka-curva-c-230-400v-nxb-63-chint" },
@@ -389,8 +454,8 @@
                 "3P_32A": { name: "Diferencial General 4P 40A 30mA", price: 47750, link: "https://www.ferrelectrica.cl/product/interruptor-diferencial-4x40a-30ma-rccb-nl1-ac-chint" },
                 "3P_40A": { name: "Diferencial General 4P 40A 30mA", price: 47750, link: "https://www.ferrelectrica.cl/product/interruptor-diferencial-4x40a-30ma-rccb-nl1-ac-chint" },
                 "3P_63A": { name: "Diferencial General 4P 63A 30mA", price: 58990, link: "https://www.ferrelectrica.cl/product/interruptor-diferencial-4x63a-30ma-rccb-nl1-ac-chint" },
-                "DIFF_2P": { name: "Diferencial Protección Enchufe 2P 25A 30mA", price: 26690, link: "https://www.ferrelectrica.cl/product/interruptor-diferencial-2x25a-30ma-rccb-nl1-ac-chint" },
-                "DIFF_3P": { name: "Diferencial Protección Enchufe 4P 40A 30mA", price: 47750, link: "https://www.ferrelectrica.cl/product/interruptor-diferencial-4x40a-30ma-rccb-nl1-ac-chint" }
+                "DIFF_2P": { name: "Diferencial Subcircuito 2P 25A 30mA (Norma RIC SEC)", price: 26690, link: "https://www.ferrelectrica.cl/product/interruptor-diferencial-2x25a-30ma-rccb-nl1-ac-chint" },
+                "DIFF_3P": { name: "Diferencial Subcircuito 4P 40A 30mA (Norma RIC SEC)", price: 47750, link: "https://www.ferrelectrica.cl/product/interruptor-diferencial-4x40a-30ma-rccb-nl1-ac-chint" }
             },
             BUSBARS: {
                 "2P_UP": { name: "Barra Repartidora Bipolar 2P 100A Aguas Arriba (Cabecera Monofásica)", price: 8990, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-bipolar-2p" },
@@ -418,7 +483,8 @@
                 PILOT_LIGHT: { name: "Luz Piloto LED Modular 220V DIN", price: 2490, link: "https://www.ferrelectrica.cl/product/luz-piloto-modular-220v-red" },
                 PLUG_CEE_1P: { name: "Enchufe Hembra Industrial Volante 16A 2P+T IP44", price: 5690, link: "https://www.easy.cl/tienda/search?w=enchufe%20industrial" },
                 PLUG_CEE_3P: { name: "Enchufe Hembra Industrial Sobretopo 32A 3P+N+T IP67", price: 13500, link: "https://www.easy.cl/tienda/search?w=enchufe%20industrial%20trifasico" },
-                CONTROL_PACK: { name: "Kit Mando: Selector 3 Pos + Luces LED Indicadoras", price: 12500, link: "https://www.easy.cl/tienda/search?w=selector%203%20posiciones" }
+                CONTROL_PACK: { name: "Kit Mando: Selector 3 Pos + Luces LED Indicadoras", price: 12500, link: "https://www.easy.cl/tienda/search?w=selector%203%20posiciones" },
+                MOTOR_TERMINALS: { name: "Set Borneras DIN + Prensaestopas IP68 (Salida Fuerza Motor)", price: 8500, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-bipolar-2p" }
             }
         };
 
@@ -429,13 +495,21 @@
         // ==========================================
         // 1. LÓGICA DE B.O.M Y CÁLCULOS PRIVADOS (ADMIN)
         // ==========================================
-        function getBOMList(systemType, amperage, controlLevel, motorPower) {
+        function getBOMList(systemType, amperage, controlLevel, motorPower, count1PSockets = 4, count3PSockets = 1) {
             let bom = [];
             let is3P = (systemType === '3P');
-            let cabinet = CATALOG_FULL.CABINETS.MEDIUM;
 
-            if (amperage === '63' || controlLevel === 'GM_CONTROL') cabinet = CATALOG_FULL.CABINETS.LARGE;
-            else if (amperage === '32' && controlLevel === 'NONE') cabinet = CATALOG_FULL.CABINETS.SMALL;
+            // Determinar Diferenciales requeridos bajo RIC N°02 (Máx. 2 enchufes por diferencial 30mA)
+            let diff1PCount = Math.ceil(count1PSockets / 2);
+            let diff3PCount = is3P ? count3PSockets : 0;
+
+            // Determinar Gabinete según módulos DIN totales acumulados
+            let totalDINModules = (is3P ? 4 : 2) + (diff1PCount * 2) + (count1PSockets * 1) + (diff3PCount * 4) + (controlLevel !== 'NONE' ? 8 : 0) + 4;
+            
+            let cabinet = CATALOG_FULL.CABINETS.MEDIUM;
+            if (totalDINModules > 24) cabinet = CATALOG_FULL.CABINETS.XL;
+            else if (totalDINModules > 12 || controlLevel === 'GM_CONTROL' || amperage === '63') cabinet = CATALOG_FULL.CABINETS.LARGE;
+            else if (totalDINModules <= 10 && !is3P) cabinet = CATALOG_FULL.CABINETS.SMALL;
 
             bom.push({ ...cabinet, qty: 1 });
 
@@ -469,6 +543,7 @@
             if (controlLevel !== 'NONE') {
                 const gmKey = `${motorPower}HP`;
                 if (CATALOG_FULL.GUARDAMOTORS[gmKey]) bom.push({ ...CATALOG_FULL.GUARDAMOTORS[gmKey], qty: 1 });
+                bom.push({ ...CATALOG_FULL.MISC.MOTOR_TERMINALS, qty: 1 });
 
                 if (controlLevel === 'GM_CONTROL') {
                     if (CATALOG_FULL.CONTACTORS[gmKey]) bom.push({ ...CATALOG_FULL.CONTACTORS[gmKey], qty: 1 });
@@ -476,19 +551,18 @@
                 }
             }
 
-            // Enchufes Hembra Salida y Protecciones por Grupo
-            if (!is3P) {
-                bom.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: 2 });
-                bom.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: 2 });
-                bom.push({ ...CATALOG_FULL.MISC.PLUG_CEE_1P, qty: 2 });
-            } else {
-                bom.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: 2 });
-                bom.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: 2 });
-                bom.push({ ...CATALOG_FULL.MISC.PLUG_CEE_1P, qty: 2 });
+            // Enchufes Monofásicos + Protecciones por Circuito RIC
+            if (count1PSockets > 0) {
+                bom.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: Math.ceil(count1PSockets / 2) });
+                bom.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: diff1PCount });
+                bom.push({ ...CATALOG_FULL.MISC.PLUG_CEE_1P, qty: count1PSockets });
+            }
 
-                bom.push({ ...CATALOG_FULL.AUTOMATICS.PROT_3P, qty: 1 });
-                bom.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P, qty: 1 });
-                bom.push({ ...CATALOG_FULL.MISC.PLUG_CEE_3P, qty: 1 });
+            // Enchufes Trifásicos + Protecciones por Circuito RIC
+            if (is3P && count3PSockets > 0) {
+                bom.push({ ...CATALOG_FULL.AUTOMATICS.PROT_3P, qty: count3PSockets });
+                bom.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P, qty: diff3PCount });
+                bom.push({ ...CATALOG_FULL.MISC.PLUG_CEE_3P, qty: count3PSockets });
             }
 
             return bom;
@@ -498,22 +572,40 @@
             const systemType = document.querySelector('input[name="systemType"]:checked').value;
             const amperageSelect = document.getElementById('amperage');
             const admin63aOpt = document.getElementById('admin63aOpt');
+            const adminSockets3PBox = document.getElementById('adminSockets3PBox');
 
-            // Restringir 63A para Monofásico (1P)
+            // Restringir 63A y Enchufes 3P para Monofásico (1P)
             if (systemType === '1P') {
                 admin63aOpt.hidden = true;
                 admin63aOpt.disabled = true;
-                if (amperageSelect.value === '63') {
-                    amperageSelect.value = '32';
-                }
+                if (amperageSelect.value === '63') amperageSelect.value = '32';
+                adminSockets3PBox.classList.add('hidden');
             } else {
                 admin63aOpt.hidden = false;
                 admin63aOpt.disabled = false;
+                adminSockets3PBox.classList.remove('hidden');
             }
 
             const amperage = amperageSelect.value;
             const controlLevel = document.getElementById('controlLevel').value;
             const motorPower = document.getElementById('motorPower').value;
+
+            // Restricción de selección de enchufes en Panel Admin si hay motor habilitado
+            const adminSockets1PElem = document.getElementById('adminSockets1P');
+            if (controlLevel !== 'NONE') {
+                if (parseInt(adminSockets1PElem.value) > 4) {
+                    adminSockets1PElem.value = "4";
+                }
+                adminSockets1PElem.options[2].disabled = true; // 6 enchufes disabled
+                adminSockets1PElem.options[3].disabled = true; // 8 enchufes disabled
+            } else {
+                adminSockets1PElem.options[2].disabled = false;
+                adminSockets1PElem.options[3].disabled = false;
+            }
+
+            const count1PSockets = parseInt(adminSockets1PElem.value) || 4;
+            const count3PSockets = parseInt(document.getElementById('adminSockets3P').value) || 1;
+
             const targetMarginVal = parseFloat(document.getElementById('targetMargin').value) || 35;
             const targetMargin = targetMarginVal / 100;
 
@@ -523,7 +615,7 @@
             if (controlLevel !== 'NONE') motorBox.classList.remove('hidden');
             else motorBox.classList.add('hidden');
 
-            const bom = getBOMList(systemType, amperage, controlLevel, motorPower);
+            const bom = getBOMList(systemType, amperage, controlLevel, motorPower, count1PSockets, count3PSockets);
 
             // Render BOM Table
             let totalNeto = 0;
@@ -556,7 +648,7 @@
             const rent = totalNeto * 0.35;
 
             const is3P = (systemType === '3P');
-            document.getElementById('panelTitle').innerText = `Tablero ${is3P ? 'Trifásico' : 'Monofásico'} ${amperage}A`;
+            document.getElementById('panelTitle').innerText = `Tablero ${is3P ? 'Trifásico' : 'Monofásico'} ${amperage}A (${count1PSockets} Salidas 220V${is3P ? ' + ' + count3PSockets + ' Salidas 380V' : ''})${controlLevel !== 'NONE' ? ' + Partidor Motor' : ''}`;
             document.getElementById('panelSubtitle').innerText = `Alimentación ${is3P ? '380V' : '220V'} - Insumos a Precio Mercado / Ferretería`;
             document.getElementById('totalCostNeto').innerText = formatCLP(totalNeto);
             document.getElementById('salePriceWithTax').innerText = formatCLP(saleWithTax);
@@ -571,15 +663,18 @@
             const systemType = document.querySelector('input[name="publicSystemType"]:checked').value;
             const public63aWrapper = document.getElementById('public63aWrapper');
             const public63aInput = document.getElementById('public63aInput');
+            const publicSockets3PWrapper = document.getElementById('publicSockets3PWrapper');
 
             // Ocultar y deseleccionar 63A si es Monofásico (1P)
             if (systemType === '1P') {
                 public63aWrapper.classList.add('hidden');
+                publicSockets3PWrapper.classList.add('hidden');
                 if (public63aInput.checked) {
                     document.querySelector('input[name="publicAmperage"][value="32"]').checked = true;
                 }
             } else {
                 public63aWrapper.classList.remove('hidden');
+                publicSockets3PWrapper.classList.remove('hidden');
             }
 
             const amperage = document.querySelector('input[name="publicAmperage"]:checked').value;
@@ -597,8 +692,28 @@
                 motorPower = publicMotorOption.split("_")[1];
             }
 
+            // Aplicar restricción de enchufes según norma si hay motor activo
+            const publicSockets1PElem = document.getElementById('publicSockets1P');
+            const publicMotorWarning = document.getElementById('publicMotorWarning');
+
+            if (controlLevel !== 'NONE') {
+                publicMotorWarning.classList.remove('hidden');
+                if (parseInt(publicSockets1PElem.value) > 4) {
+                    publicSockets1PElem.value = "4";
+                }
+                publicSockets1PElem.options[2].disabled = true; // 6 enchufes
+                publicSockets1PElem.options[3].disabled = true; // 8 enchufes
+            } else {
+                publicMotorWarning.classList.add('hidden');
+                publicSockets1PElem.options[2].disabled = false;
+                publicSockets1PElem.options[3].disabled = false;
+            }
+
+            const count1PSockets = parseInt(publicSockets1PElem.value) || 4;
+            const count3PSockets = parseInt(document.getElementById('publicSockets3P').value) || 1;
+
             // Obtener BOM con catálogo real
-            const bom = getBOMList(systemType, amperage, controlLevel, motorPower);
+            const bom = getBOMList(systemType, amperage, controlLevel, motorPower, count1PSockets, count3PSockets);
             let totalNeto = bom.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
             let finalPrice = 0;
@@ -611,11 +726,12 @@
 
             const is3P = (systemType === '3P');
             let motorTag = "";
-            if (controlLevel === "GM_SIMPLE") motorTag = ` + Guardamotor ${motorPower}HP`;
-            if (controlLevel === "GM_CONTROL") motorTag = ` + Mando Auto/Man ${motorPower}HP`;
+            if (controlLevel === "GM_SIMPLE") motorTag = ` + Guardamotor Directo ${motorPower}HP`;
+            if (controlLevel === "GM_CONTROL") motorTag = ` + Mando Automatizado (Auto/Man) ${motorPower}HP`;
 
-            const title = `Tablero ${is3P ? 'Trifásico (380V)' : 'Monofásico (220V)'} ${amperage}A${motorTag}`;
-            const desc = `${serviceMode === 'BUY' ? 'Compra de equipo nuevo' : 'Arriendo Mensual'} - Gabinete IP65 Hermético`;
+            const socketSummary = `${count1PSockets} Salidas 220V${is3P ? ' + ' + count3PSockets + ' Salidas 380V' : ''}`;
+            const title = `Tablero ${is3P ? 'Trifásico (380V)' : 'Monofásico (220V)'} ${amperage}A - ${socketSummary}${motorTag}`;
+            const desc = `${serviceMode === 'BUY' ? 'Compra de equipo nuevo' : 'Arriendo Mensual'} - Protecciones RIC SEC - IP65`;
 
             document.getElementById('resTitle').innerText = title;
             document.getElementById('resDesc').innerText = desc;
@@ -624,6 +740,8 @@
 
             const msg = `Hola ELECTROFAENA, me interesa solicitar una cotización formal para:\n\n` +
                 `📌 *Producto:* ${title}\n` +
+                `⚡ *Configuración:* ${socketSummary}\n` +
+                `⚙️ *Módulo Motor:* ${controlLevel !== 'NONE' ? motorTag : 'Sin motor'}\n` +
                 `📋 *Modalidad:* ${serviceMode === 'BUY' ? 'Compra' : 'Arriendo Mensual'}\n` +
                 `💰 *Valor Estimado:* ${formatCLP(finalPrice)} (+IVA)\n\n` +
                 `¿Me pueden enviar la cotización formal en PDF?`;
