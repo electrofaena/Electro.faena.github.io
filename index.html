@@ -200,7 +200,7 @@
                 <!-- Indicador Normativo de Restricción cuando hay Motor -->
                 <div id="publicMotorWarning" class="hidden p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-[11px] text-amber-300 flex items-start gap-2">
                     <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-0.5 shrink-0"></i>
-                    <span><strong>Nota SEC:</strong> Al incluir motor, se restringe la cantidad de enchufes para preservar el espacio DIN y capacidad térmica del gabinete.</span>
+                    <span><strong>Restricción Normativa RIC SEC:</strong> Al incluir mando/guardamotor, la cantidad de salidas se limita automáticamente a máx. 2 Monofásicos y 1 Trifásico para preservar el espacio DIN y evitar sobrecalentamiento térmico.</span>
                 </div>
             </div>
 
@@ -577,6 +577,78 @@
             }
         };
 
+        function getBOMList(systemType, amperage, controlLevel, motorPower, count1P, count3P) {
+            const list = [];
+
+            // 1. Gabinete metálico IP65 según volumen total de componentes
+            let cabinetKey = 'SMALL';
+            const totalSockets = count1P + (systemType === '3P' ? count3P : 0);
+            if (controlLevel !== 'NONE' || totalSockets >= 6 || (systemType === '3P' && amperage === '63')) {
+                cabinetKey = 'XL';
+            } else if (totalSockets >= 4 || systemType === '3P') {
+                cabinetKey = 'LARGE';
+            } else if (totalSockets >= 2) {
+                cabinetKey = 'MEDIUM';
+            }
+            list.push({ ...CATALOG_FULL.CABINETS[cabinetKey], qty: 1 });
+
+            // 2. Automático General
+            const autoKey = `${systemType}_${amperage}A`;
+            if (CATALOG_FULL.AUTOMATICS[autoKey]) {
+                list.push({ ...CATALOG_FULL.AUTOMATICS[autoKey], qty: 1 });
+            }
+
+            // 3. Diferencial General
+            const diffKey = `${systemType}_${amperage}A`;
+            if (CATALOG_FULL.DIFFERENTIALS[diffKey]) {
+                list.push({ ...CATALOG_FULL.DIFFERENTIALS[diffKey], qty: 1 });
+            }
+
+            // 4. Barras Repartidoras DIN
+            const busKey = systemType === '1P' ? '2P_UP' : '4P_UP';
+            list.push({ ...CATALOG_FULL.BUSBARS[busKey], qty: 1 });
+
+            // 5. Clavija / Enchufe Macho Alimentación
+            list.push({ ...CATALOG_FULL.MALE_PLUGS[systemType], qty: 1 });
+
+            // 6. Enchufes Monofásicos y Protecciones Indiv. según RIC SEC
+            if (count1P > 0) {
+                list.push({ ...CATALOG_FULL.MISC.PLUG_CEE_1P, qty: count1P });
+                const auto1PQty = Math.ceil(count1P / 2);
+                list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: auto1PQty });
+                const diff1PQty = Math.ceil(count1P / 2);
+                list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: diff1PQty });
+            }
+
+            // 7. Enchufes Trifásicos y Protecciones Indiv.
+            if (systemType === '3P' && count3P > 0) {
+                list.push({ ...CATALOG_FULL.MISC.PLUG_CEE_3P, qty: count3P });
+                list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_3P, qty: count3P });
+                list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P, qty: count3P });
+            }
+
+            // 8. Guardamotor / Contactor / Mando Motor opcional
+            if (controlLevel !== 'NONE') {
+                const hpKey = motorPower || '1';
+                if (CATALOG_FULL.GUARDAMOTORS[hpKey]) {
+                    list.push({ ...CATALOG_FULL.GUARDAMOTORS[hpKey], qty: 1 });
+                }
+                if (controlLevel === 'GM_CONTROL') {
+                    if (CATALOG_FULL.CONTACTORS[hpKey]) {
+                        list.push({ ...CATALOG_FULL.CONTACTORS[hpKey], qty: 1 });
+                    }
+                    list.push({ ...CATALOG_FULL.MISC.CONTROL_PACK, qty: 1 });
+                }
+                list.push({ ...CATALOG_FULL.MISC.MOTOR_TERMINALS, qty: 1 });
+            }
+
+            // 9. Elementos de Seguridad RIC SEC Obligatorios
+            list.push({ ...CATALOG_FULL.MISC.EMERGENCY_BUTTON, qty: 1 });
+            list.push({ ...CATALOG_FULL.MISC.PILOT_LIGHT, qty: systemType === '1P' ? 1 : 3 });
+
+            return list;
+        }
+
         function formatCLP(val) {
             return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(val);
         }
@@ -584,69 +656,6 @@
         // ==========================================
         // 1. LÓGICA DE B.O.M Y CÁLCULOS PRIVADOS (ADMIN)
         // ==========================================
-        function getBOMList(systemType, amperage, controlLevel, motorPower, count1PSockets = 4, count3PSockets = 1) {
-            let bom = [];
-            let is3P = (systemType === '3P');
-
-            let diff1PCount = Math.ceil(count1PSockets / 2);
-            let diff3PCount = is3P ? count3PSockets : 0;
-
-            let totalDINModules = (is3P ? 4 : 2) + (diff1PCount * 2) + (count1PSockets * 1) + (diff3PCount * 4) + (controlLevel !== 'NONE' ? 8 : 0) + 4;
-            
-            let cabinet = CATALOG_FULL.CABINETS.MEDIUM;
-            if (totalDINModules > 24) cabinet = CATALOG_FULL.CABINETS.XL;
-            else if (totalDINModules > 12 || controlLevel === 'GM_CONTROL' || amperage === '63') cabinet = CATALOG_FULL.CABINETS.LARGE;
-            else if (totalDINModules <= 10 && !is3P) cabinet = CATALOG_FULL.CABINETS.SMALL;
-
-            bom.push({ ...cabinet, qty: 1 });
-
-            const malePlug = is3P ? CATALOG_FULL.MALE_PLUGS["3P"] : CATALOG_FULL.MALE_PLUGS["1P"];
-            bom.push({ ...malePlug, qty: 1 });
-
-            const autoKey = `${systemType}_${amperage}A`;
-            if (CATALOG_FULL.AUTOMATICS[autoKey]) bom.push({ ...CATALOG_FULL.AUTOMATICS[autoKey], qty: 1 });
-            if (CATALOG_FULL.DIFFERENTIALS[autoKey]) bom.push({ ...CATALOG_FULL.DIFFERENTIALS[autoKey], qty: 1 });
-
-            bom.push({ ...CATALOG_FULL.MISC.SHUNT_RELEASE, qty: 1 });
-            bom.push({ ...CATALOG_FULL.MISC.EMERGENCY_BUTTON, qty: 1 });
-
-            const pilotQty = is3P ? 3 : 1;
-            bom.push({ ...CATALOG_FULL.MISC.PILOT_LIGHT, qty: pilotQty });
-
-            if (is3P) {
-                bom.push({ ...CATALOG_FULL.BUSBARS["4P_UP"], qty: 1 });
-                bom.push({ ...CATALOG_FULL.BUSBARS["4P_DOWN"], qty: 1 });
-            } else {
-                bom.push({ ...CATALOG_FULL.BUSBARS["2P_UP"], qty: 1 });
-                bom.push({ ...CATALOG_FULL.BUSBARS["2P_DOWN"], qty: 1 });
-            }
-
-            if (controlLevel !== 'NONE') {
-                const gmKey = `${motorPower}`;
-                if (CATALOG_FULL.GUARDAMOTORS[gmKey]) bom.push({ ...CATALOG_FULL.GUARDAMOTORS[gmKey], qty: 1 });
-                bom.push({ ...CATALOG_FULL.MISC.MOTOR_TERMINALS, qty: 1 });
-
-                if (controlLevel === 'GM_CONTROL') {
-                    if (CATALOG_FULL.CONTACTORS[gmKey]) bom.push({ ...CATALOG_FULL.CONTACTORS[gmKey], qty: 1 });
-                    bom.push({ ...CATALOG_FULL.MISC.CONTROL_PACK, qty: 1 });
-                }
-            }
-
-            if (count1PSockets > 0) {
-                bom.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: Math.ceil(count1PSockets / 2) });
-                bom.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: diff1PCount });
-                bom.push({ ...CATALOG_FULL.MISC.PLUG_CEE_1P, qty: count1PSockets });
-            }
-
-            if (is3P && count3PSockets > 0) {
-                bom.push({ ...CATALOG_FULL.AUTOMATICS.PROT_3P, qty: count3PSockets });
-                bom.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P, qty: diff3PCount });
-                bom.push({ ...CATALOG_FULL.MISC.PLUG_CEE_3P, qty: count3PSockets });
-            }
-
-            return bom;
-        }
-
         function updateCalculations() {
             const systemType = document.querySelector('input[name="systemType"]:checked').value;
             const amperageSelect = document.getElementById('amperage');
@@ -676,19 +685,34 @@
             }
 
             const adminSockets1PElem = document.getElementById('adminSockets1P');
+            const adminSockets3PElem = document.getElementById('adminSockets3P');
+
             if (controlLevel !== 'NONE') {
-                if (parseInt(adminSockets1PElem.value) > 4) {
-                    adminSockets1PElem.value = "4";
+                // Restringir a máximo 2 enchufes monofásicos en panel interno
+                if (parseInt(adminSockets1PElem.value) > 2) {
+                    adminSockets1PElem.value = "2";
                 }
-                adminSockets1PElem.options[2].disabled = true;
-                adminSockets1PElem.options[3].disabled = true;
+                adminSockets1PElem.options[1].disabled = true; // 4 enchufes
+                adminSockets1PElem.options[2].disabled = true; // 6 enchufes
+                adminSockets1PElem.options[3].disabled = true; // 8 enchufes
+
+                // Restringir a máximo 1 enchufe trifásico
+                if (parseInt(adminSockets3PElem.value) > 1) {
+                    adminSockets3PElem.value = "1";
+                }
+                adminSockets3PElem.options[1].disabled = true; // 2 enchufes
+                adminSockets3PElem.options[2].disabled = true; // 3 enchufes
             } else {
-                adminSockets1PElem.options[2].disabled = false;
-                adminSockets1PElem.options[3].disabled = false;
+                for (let i = 0; i < adminSockets1PElem.options.length; i++) {
+                    adminSockets1PElem.options[i].disabled = false;
+                }
+                for (let i = 0; i < adminSockets3PElem.options.length; i++) {
+                    adminSockets3PElem.options[i].disabled = false;
+                }
             }
 
             const count1PSockets = parseInt(adminSockets1PElem.value) || 4;
-            const count3PSockets = parseInt(document.getElementById('adminSockets3P').value) || 1;
+            const count3PSockets = parseInt(adminSockets3PElem.value) || 1;
 
             const targetMarginVal = parseFloat(document.getElementById('targetMargin').value) || 35;
             const targetMargin = targetMarginVal / 100;
@@ -755,11 +779,45 @@
             const amperage = document.querySelector('input[name="publicAmperage"]:checked').value;
             const motorOpt = document.getElementById('publicMotorOption').value;
             const motorWarning = document.getElementById('publicMotorWarning');
+            const publicSockets1PElem = document.getElementById('publicSockets1P');
+            const publicSockets3PElem = document.getElementById('publicSockets3P');
 
             if (motorOpt !== 'NONE') {
                 motorWarning.classList.remove('hidden');
+
+                // Restricción a máximo 2 enchufes monofásicos por norma RIC SEC cuando hay mando de motor
+                for (let opt of publicSockets1PElem.options) {
+                    if (parseInt(opt.value) > 2) {
+                        opt.disabled = true;
+                    } else {
+                        opt.disabled = false;
+                    }
+                }
+                if (parseInt(publicSockets1PElem.value) > 2) {
+                    publicSockets1PElem.value = "2";
+                }
+
+                // Restricción a máximo 1 enchufe trifásico
+                for (let opt of publicSockets3PElem.options) {
+                    if (parseInt(opt.value) > 1) {
+                        opt.disabled = true;
+                    } else {
+                        opt.disabled = false;
+                    }
+                }
+                if (parseInt(publicSockets3PElem.value) > 1) {
+                    publicSockets3PElem.value = "1";
+                }
             } else {
                 motorWarning.classList.add('hidden');
+                
+                // Habilitar todas las opciones de enchufes cuando no se selecciona motor
+                for (let opt of publicSockets1PElem.options) {
+                    opt.disabled = false;
+                }
+                for (let opt of publicSockets3PElem.options) {
+                    opt.disabled = false;
+                }
             }
 
             const count1P = parseInt(document.getElementById('publicSockets1P').value) || 4;
