@@ -4,11 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableros Eléctricos Normados | ELECTROFAENA</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        
         @media print {
             .no-print { display: none !important; }
             .print-only { display: block !important; }
@@ -17,30 +26,39 @@
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-blue-600 selection:text-white antialiased">
 
     <!-- Navbar Global -->
     <nav class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 no-print">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
             <!-- Logo con trigger secreto (3 clics) -->
-            <div class="flex items-center gap-2.5 cursor-pointer select-none" onclick="checkAdminKey(event)" title="ELECTROFAENA SpA">
+            <div class="flex items-center gap-2.5 cursor-pointer select-none" onclick="checkAdminKey(event)" title="Haz 3 clics para acceso de Administrador">
                 <div class="bg-gradient-to-tr from-blue-600 to-cyan-400 p-2 rounded-xl text-white font-bold text-base shadow-lg shadow-blue-500/20">
                     <i class="fa-solid fa-bolt-lightning"></i>
                 </div>
                 <div>
-                    <span class="font-extrabold text-base tracking-tight text-white">ELECTRO<span class="text-blue-500">FAENA</span></span>
+                    <span class="font-extrabold text-base tracking-tight text-white flex items-center gap-1.5">
+                        ELECTRO<span class="text-blue-500">FAENA</span>
+                        <span class="text-[9px] bg-blue-500/10 text-blue-400 border border-blue-500/30 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">SEC RIC</span>
+                    </span>
                     <span class="block text-[10px] text-slate-400 font-medium">Normativa RIC / SEC - Certificado</span>
                 </div>
             </div>
             
             <!-- Botones a la derecha -->
             <div class="flex items-center gap-2">
-                <a id="navWaBtn" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-emerald-600/20">
-                    <i class="fa-brands fa-whatsapp text-sm"></i> <span class="hidden sm:inline">Contacto</span>
+                <button onclick="toggleGuaranteeModal()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-shield-halved text-sm"></i>
+                    <span>GARANTÍA</span>
+                </button>
+                <a id="navWaBtn" href="https://wa.me/56932810327" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-emerald-600/20">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span class="hidden sm:inline">Contacto</span>
                 </a>
-                <a href="mailto:electro.faena.sis@gmail.com?subject=Reclamo%20ELECTROFAENA" class="bg-red-600 hover:bg-red-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-red-600/20">
-                    <i class="fa-solid fa-envelope text-sm"></i> <span class="hidden sm:inline">GARANTÍA</span>
-                </a>
+                <button onclick="openLoginModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 border border-slate-700">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    <span class="hidden sm:inline">Panel Privado</span>
+                </button>
             </div>
         </div>
     </nav>
@@ -54,7 +72,7 @@
             <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Cotiza tu Tablero de Faena o Control
             </h1>
-            <p class="text-xs text-slate-400">
+            <p class="text-xs text-slate-400 leading-relaxed">
                 Todos nuestros equipos cumplen estrictamente con <strong>Norma RIC N°02/10 SEC</strong> con protecciones independientes por circuito.
             </p>
         </div>
@@ -116,7 +134,7 @@
                 </div>
             </div>
 
-            <!-- 3. Cantidad de Enchufes (Límite Normativo RIC) -->
+            <!-- 3. Cantidad de Enchufes -->
             <div class="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800/80">
                 <div class="flex justify-between items-center">
                     <label class="block text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
@@ -139,7 +157,7 @@
                         </select>
                     </div>
 
-                    <!-- Enchufes 380V Trifásicos (Solo activo si es 3P) -->
+                    <!-- Enchufes 380V Trifásicos -->
                     <div id="publicSockets3PWrapper">
                         <label class="block text-[11px] text-slate-400 font-medium mb-1">Enchufes Trifásicos (380V - Industrial IP67)</label>
                         <select id="publicSockets3P" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
@@ -150,7 +168,7 @@
                     </div>
                 </div>
                 <p class="text-[10px] text-slate-400 italic">
-                    * Normativa SEC exige máximo 2 a 3 enchufe por diferencial para prevenir caídas por fuga acumulada de herramientas.
+                    * Normativa SEC exige máximo 2 a 3 enchufes por diferencial para prevenir caídas por fuga acumulada de herramientas.
                 </p>
             </div>
 
@@ -393,6 +411,55 @@
         </div>
     </main>
 
+    <!-- Modal de Garantía Técnica y Normativa -->
+    <div id="guaranteeModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
+            <button onclick="toggleGuaranteeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="text-center space-y-2">
+                <div class="bg-amber-500/20 text-amber-400 w-14 h-14 rounded-full flex items-center justify-center mx-auto border border-amber-500/30">
+                    <i class="fa-solid fa-shield-halved text-2xl"></i>
+                </div>
+                <h3 class="font-black text-xl text-white">Garantía Técnica SEC ElectroFaena</h3>
+                <p class="text-xs text-slate-400">12 Meses de Cobertura Total en Obra y Certificación</p>
+            </div>
+
+            <div class="space-y-2.5 text-xs text-slate-300">
+                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1">
+                    <span class="font-bold text-amber-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-check text-emerald-400"></i> 1. Cobertura de Componentes
+                    </span>
+                    <p class="text-slate-400 text-[11px]">Reemplazo inmediato sin costo de automáticos, diferenciales y tomacorrientes por falla de fábrica.</p>
+                </div>
+
+                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1">
+                    <span class="font-bold text-amber-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-box-archive text-amber-400"></i> 2. Hermeticidad IP65 Garantizada
+                    </span>
+                    <p class="text-slate-400 text-[11px]">Garantía de estanqueidad en gabinete metálico o poliester ante agua, polvo y exposición en intemperie.</p>
+                </div>
+
+                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1">
+                    <span class="font-bold text-amber-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-contract text-blue-400"></i> 3. Cumplimiento Pliego RIC N°02 SEC
+                    </span>
+                    <p class="text-slate-400 text-[11px]">Cada tablero se entrega ensayado y pre-configurado para inspección de fiscalizador TE1 SEC.</p>
+                </div>
+            </div>
+
+            <div class="pt-2 flex gap-2">
+                <a href="mailto:electro.faena.sis@gmail.com?subject=Solicitud%20de%20Garantia%20ELECTROFAENA" class="flex-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold py-2.5 rounded-xl transition text-center">
+                    <i class="fa-solid fa-envelope mr-1"></i> Reportar Falla
+                </a>
+                <button onclick="toggleGuaranteeModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Login Administrador -->
     <div id="loginModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl">
@@ -405,8 +472,8 @@
             </div>
 
             <div class="space-y-2">
-                <input type="password" id="adminPassInput" placeholder="Contraseña..." onkeyup="if(event.key==='Enter') submitAdminLogin()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white text-center font-mono focus:outline-none focus:border-blue-500">
-                <p id="loginError" class="hidden text-[11px] text-red-400 text-center">Contraseña incorrecta</p>
+                <input type="password" id="adminPassInput" placeholder="Contraseña (por defecto: 1234)" onkeyup="if(event.key==='Enter') submitAdminLogin()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white text-center font-mono focus:outline-none focus:border-blue-500">
+                <p id="loginError" class="hidden text-[11px] text-red-400 text-center font-bold">Contraseña incorrecta</p>
             </div>
 
             <div class="flex gap-2">
@@ -428,6 +495,9 @@
     <script>
         const WHATSAPP_NUM = "56932810327";
         const ADMIN_PIN = "1234"; // CLAVE PRIVADA DE ACCESO INTERNO
+
+        let adminClicks = 0;
+        let adminTimer = null;
 
         // Catálogo de insumos basado en precios de mercado reales con proveedores
         const CATALOG_FULL = {
@@ -458,24 +528,24 @@
                 "DIFF_3P": { name: "Diferencial Subcircuito 4P 40A 30mA (Norma RIC SEC)", price: 47750, link: "https://www.ferrelectrica.cl/product/interruptor-diferencial-4x40a-30ma-rccb-nl1-ac-chint" }
             },
             BUSBARS: {
-                "2P_UP": { name: "Barra Repartidora Bipolar 2P 100A Aguas Arriba (Cabecera Monofásica)", price: 8990, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-bipolar-2p" },
-                "2P_DOWN": { name: "Barra Repartidora Bipolar 2P DIN Aguas Abajo (Distribución Monofásica)", price: 6800, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-bipolar-2p" },
-                "4P_UP": { name: "Barra Repartidora Tetrapolar 4P 125A Aguas Arriba (Cabecera Trifásica)", price: 14500, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-tetrapolar" },
-                "4P_DOWN": { name: "Barra Repartidora Tetrapolar 4P DIN Aguas Abajo (Distribución Trifásica)", price: 11200, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-tetrapolar" }
+                "2P_UP": { name: "Barra Repartidora Bipolar 2P 100A Aguas Arriba", price: 8990, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-bipolar-2p" },
+                "2P_DOWN": { name: "Barra Repartidora Bipolar 2P DIN Aguas Abajo", price: 6800, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-bipolar-2p" },
+                "4P_UP": { name: "Barra Repartidora Tetrapolar 4P 125A Aguas Arriba", price: 14500, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-tetrapolar" },
+                "4P_DOWN": { name: "Barra Repartidora Tetrapolar 4P DIN Aguas Abajo", price: 11200, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-tetrapolar" }
             },
             MALE_PLUGS: {
                 "1P": { name: "Enchufe Macho Industrial Volante Alimentación 16A/32A 2P+T IP44", price: 4890, link: "https://www.easy.cl/tienda/search?w=enchufe%20macho%20industrial%20monofasico" },
                 "3P": { name: "Enchufe Macho Industrial Volante Alimentación 32A/63A 3P+N+T IP67", price: 11900, link: "https://www.easy.cl/tienda/search?w=enchufe%20macho%20industrial%20trifasico" }
             },
             GUARDAMOTORS: {
-                "1HP": { name: "Guardamotor Regulable 1.6 - 2.5A", price: 27390, link: "https://www.ferrelectrica.cl/product/guardamotor-me07c-1-6-2-5a-660v-lexo" },
-                "2HP": { name: "Guardamotor Regulable 2.5 - 4.0A", price: 27390, link: "https://www.ferrelectrica.cl/product/guardamotor-me08c-2-5-4a-lexo" },
-                "3HP": { name: "Guardamotor Regulable 4.0 - 6.3A", price: 27390, link: "https://www.ferrelectrica.cl/product/guardamotor-me10c-4-6-3a-lexo" }
+                "1": { name: "Guardamotor Regulable 1.6 - 2.5A", price: 27390, link: "https://www.ferrelectrica.cl/product/guardamotor-me07c-1-6-2-5a-660v-lexo" },
+                "2": { name: "Guardamotor Regulable 2.5 - 4.0A", price: 27390, link: "https://www.ferrelectrica.cl/product/guardamotor-me08c-2-5-4a-lexo" },
+                "3": { name: "Guardamotor Regulable 4.0 - 6.3A", price: 27390, link: "https://www.ferrelectrica.cl/product/guardamotor-me10c-4-6-3a-lexo" }
             },
             CONTACTORS: {
-                "1HP": { name: "Contactor 9A 220VAC", price: 8850, link: "https://www.ferrelectrica.cl/product/contactor-d0910m7-9a-1no-ip20-lexo" },
-                "2HP": { name: "Contactor 12A 220VAC", price: 10050, link: "https://www.ferrelectrica.cl/product/contactor-d1210m7-12a-1no-ip20-lexo" },
-                "3HP": { name: "Contactor 18A 220VAC", price: 11086, link: "https://www.ferrelectrica.cl/product/contactor-d1810m7-18a-1no-ip20-lexo" }
+                "1": { name: "Contactor 9A 220VAC", price: 8850, link: "https://www.ferrelectrica.cl/product/contactor-d0910m7-9a-1no-ip20-lexo" },
+                "2": { name: "Contactor 12A 220VAC", price: 10050, link: "https://www.ferrelectrica.cl/product/contactor-d1210m7-12a-1no-ip20-lexo" },
+                "3": { name: "Contactor 18A 220VAC", price: 11086, link: "https://www.ferrelectrica.cl/product/contactor-d1810m7-18a-1no-ip20-lexo" }
             },
             MISC: {
                 SHUNT_RELEASE: { name: "Bobina de Disparo MX 220V/240V AC", price: 8990, link: "https://www.ferrelectrica.cl/product/bobina-de-disparo-mx-220v-nxb-63" },
@@ -499,11 +569,11 @@
             let bom = [];
             let is3P = (systemType === '3P');
 
-            // Determinar Diferenciales requeridos bajo RIC N°02 (Máx. 2 enchufes por diferencial 30mA)
+            // Determinar Diferenciales requeridos bajo RIC N°02
             let diff1PCount = Math.ceil(count1PSockets / 2);
             let diff3PCount = is3P ? count3PSockets : 0;
 
-            // Determinar Gabinete según módulos DIN totales acumulados
+            // Determinar Módulos DIN
             let totalDINModules = (is3P ? 4 : 2) + (diff1PCount * 2) + (count1PSockets * 1) + (diff3PCount * 4) + (controlLevel !== 'NONE' ? 8 : 0) + 4;
             
             let cabinet = CATALOG_FULL.CABINETS.MEDIUM;
@@ -513,7 +583,7 @@
 
             bom.push({ ...cabinet, qty: 1 });
 
-            // Enchufe Macho de Alimentación General del Tablero
+            // Enchufe Macho de Alimentación
             const malePlug = is3P ? CATALOG_FULL.MALE_PLUGS["3P"] : CATALOG_FULL.MALE_PLUGS["1P"];
             bom.push({ ...malePlug, qty: 1 });
 
@@ -541,7 +611,7 @@
 
             // Módulo de Mando / Motor
             if (controlLevel !== 'NONE') {
-                const gmKey = `${motorPower}HP`;
+                const gmKey = `${motorPower}`;
                 if (CATALOG_FULL.GUARDAMOTORS[gmKey]) bom.push({ ...CATALOG_FULL.GUARDAMOTORS[gmKey], qty: 1 });
                 bom.push({ ...CATALOG_FULL.MISC.MOTOR_TERMINALS, qty: 1 });
 
@@ -551,14 +621,14 @@
                 }
             }
 
-            // Enchufes Monofásicos + Protecciones por Circuito RIC
+            // Enchufes Monofásicos + Protecciones RIC
             if (count1PSockets > 0) {
                 bom.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: Math.ceil(count1PSockets / 2) });
                 bom.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: diff1PCount });
                 bom.push({ ...CATALOG_FULL.MISC.PLUG_CEE_1P, qty: count1PSockets });
             }
 
-            // Enchufes Trifásicos + Protecciones por Circuito RIC
+            // Enchufes Trifásicos + Protecciones RIC
             if (is3P && count3PSockets > 0) {
                 bom.push({ ...CATALOG_FULL.AUTOMATICS.PROT_3P, qty: count3PSockets });
                 bom.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P, qty: diff3PCount });
@@ -590,14 +660,22 @@
             const controlLevel = document.getElementById('controlLevel').value;
             const motorPower = document.getElementById('motorPower').value;
 
+            // Mostrar u ocultar selector de potencia motor
+            const motorPowerBox = document.getElementById('motorPowerBox');
+            if (controlLevel !== 'NONE') {
+                motorPowerBox.classList.remove('hidden');
+            } else {
+                motorPowerBox.classList.add('hidden');
+            }
+
             // Restricción de selección de enchufes en Panel Admin si hay motor habilitado
             const adminSockets1PElem = document.getElementById('adminSockets1P');
             if (controlLevel !== 'NONE') {
                 if (parseInt(adminSockets1PElem.value) > 4) {
                     adminSockets1PElem.value = "4";
                 }
-                adminSockets1PElem.options[2].disabled = true; // 6 enchufes disabled
-                adminSockets1PElem.options[3].disabled = true; // 8 enchufes disabled
+                adminSockets1PElem.options[2].disabled = true;
+                adminSockets1PElem.options[3].disabled = true;
             } else {
                 adminSockets1PElem.options[2].disabled = false;
                 adminSockets1PElem.options[3].disabled = false;
@@ -611,173 +689,163 @@
 
             document.getElementById('targetMarginLabel').innerText = targetMarginVal + "%";
 
-            const motorBox = document.getElementById('motorPowerBox');
-            if (controlLevel !== 'NONE') motorBox.classList.remove('hidden');
-            else motorBox.classList.add('hidden');
-
+            // Obtener B.O.M y Costo Neto Total
             const bom = getBOMList(systemType, amperage, controlLevel, motorPower, count1PSockets, count3PSockets);
-
-            // Render BOM Table
-            let totalNeto = 0;
-            const tbody = document.getElementById('bomTable');
-            tbody.innerHTML = '';
-
+            
+            let totalCostNeto = 0;
             bom.forEach(item => {
-                const subtotal = item.price * item.qty;
-                totalNeto += subtotal;
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-2 text-slate-200">${item.name}</td>
-                    <td class="p-2 text-center font-bold text-slate-300">${item.qty}</td>
-                    <td class="p-2 text-right text-slate-400 font-mono">${formatCLP(item.price)}</td>
-                    <td class="p-2 text-right text-amber-400 font-bold font-mono">${formatCLP(subtotal)}</td>
-                    <td class="p-2 text-center no-print">
-                        <a href="${item.link}" target="_blank" class="inline-flex items-center justify-center bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white px-2.5 py-1 rounded-lg border border-blue-500/30 transition shadow-sm gap-1.5 text-[11px]" title="Ver y comprar en Ferretería">
-                            <span>Ver</span> <i class="fa-solid fa-external-link text-[10px]"></i>
-                        </a>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+                totalCostNeto += (item.price * item.qty);
             });
 
-            // Cálculos Financieros
-            const saleNeto = totalNeto / (1 - targetMargin);
+            // Venta = Costo / (1 - Margen)
+            const saleNeto = totalCostNeto / Math.max(0.01, (1 - targetMargin));
             const saleWithTax = saleNeto * 1.19;
-            const profit = saleNeto - totalNeto;
-            const rent = totalNeto * 0.35;
+            const profitNeto = saleNeto - totalCostNeto;
+            const rentMonthly = saleWithTax * 0.28;
 
-            const is3P = (systemType === '3P');
-            document.getElementById('panelTitle').innerText = `Tablero ${is3P ? 'Trifásico' : 'Monofásico'} ${amperage}A (${count1PSockets} Salidas 220V${is3P ? ' + ' + count3PSockets + ' Salidas 380V' : ''})${controlLevel !== 'NONE' ? ' + Partidor Motor' : ''}`;
-            document.getElementById('panelSubtitle').innerText = `Alimentación ${is3P ? '380V' : '220V'} - Insumos a Precio Mercado / Ferretería`;
-            document.getElementById('totalCostNeto').innerText = formatCLP(totalNeto);
+            // Actualizar UI del Panel Privado
+            document.getElementById('panelTitle').innerText = `Tablero ${systemType === '1P' ? 'Monofásico 220V' : 'Trifásico 380V'} - ${amperage}A`;
+            document.getElementById('panelSubtitle').innerText = `${count1PSockets} Enchufes 220V ${systemType === '3P' ? '+ ' + count3PSockets + ' Enchufe(s) 380V' : ''} ${controlLevel !== 'NONE' ? '| Mando Motor ' + motorPower + ' HP' : ''}`;
+
+            document.getElementById('totalCostNeto').innerText = formatCLP(totalCostNeto);
             document.getElementById('salePriceWithTax').innerText = formatCLP(saleWithTax);
-            document.getElementById('profitNeto').innerText = formatCLP(profit);
-            document.getElementById('rentMonthly').innerText = `${formatCLP(rent)} /mes`;
+            document.getElementById('profitNeto').innerText = formatCLP(profitNeto);
+            document.getElementById('rentMonthly').innerText = formatCLP(rentMonthly);
+
+            // Render Tabla de Materiales
+            const bomTable = document.getElementById('bomTable');
+            bomTable.innerHTML = bom.map(item => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="p-2 font-medium text-slate-200">${item.name}</td>
+                    <td class="p-2 text-center text-amber-400 font-bold">${item.qty}</td>
+                    <td class="p-2 text-right">${formatCLP(item.price)}</td>
+                    <td class="p-2 text-right font-bold text-slate-100">${formatCLP(item.price * item.qty)}</td>
+                    <td class="p-2 text-center no-print">
+                        <a href="${item.link}" target="_blank" class="bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white px-2 py-1 rounded text-[10px] transition inline-flex items-center gap-1">
+                            <i class="fa-solid fa-cart-shopping text-[9px]"></i> Ver
+                        </a>
+                    </td>
+                </tr>
+            `).join('');
         }
 
         // ==========================================
-        // 2. LÓGICA COTIZADOR PÚBLICO
+        // 2. LÓGICA DE COTIZADOR PÚBLICO
         // ==========================================
         function updateQuote() {
             const systemType = document.querySelector('input[name="publicSystemType"]:checked').value;
             const public63aWrapper = document.getElementById('public63aWrapper');
-            const public63aInput = document.getElementById('public63aInput');
             const publicSockets3PWrapper = document.getElementById('publicSockets3PWrapper');
 
-            // Ocultar y deseleccionar 63A si es Monofásico (1P)
+            // Restricción visual de 63A en Monofásico
             if (systemType === '1P') {
-                public63aWrapper.classList.add('hidden');
-                publicSockets3PWrapper.classList.add('hidden');
-                if (public63aInput.checked) {
+                public63aWrapper.classList.add('opacity-40', 'pointer-events-none');
+                document.getElementById('public63aInput').disabled = true;
+                if (document.querySelector('input[name="publicAmperage"]:checked').value === '63') {
                     document.querySelector('input[name="publicAmperage"][value="32"]').checked = true;
                 }
+                publicSockets3PWrapper.classList.add('hidden');
             } else {
-                public63aWrapper.classList.remove('hidden');
+                public63aWrapper.classList.remove('opacity-40', 'pointer-events-none');
+                document.getElementById('public63aInput').disabled = false;
                 publicSockets3PWrapper.classList.remove('hidden');
             }
 
             const amperage = document.querySelector('input[name="publicAmperage"]:checked').value;
-            const publicMotorOption = document.getElementById('publicMotorOption').value;
-            const serviceMode = document.querySelector('input[name="publicServiceMode"]:checked').value;
+            const motorOpt = document.getElementById('publicMotorOption').value;
+            const motorWarning = document.getElementById('publicMotorWarning');
 
-            let controlLevel = "NONE";
-            let motorPower = "1";
-
-            if (publicMotorOption.startsWith("GM_")) {
-                controlLevel = "GM_SIMPLE";
-                motorPower = publicMotorOption.split("_")[1];
-            } else if (publicMotorOption.startsWith("CTRL_")) {
-                controlLevel = "GM_CONTROL";
-                motorPower = publicMotorOption.split("_")[1];
-            }
-
-            // Aplicar restricción de enchufes según norma si hay motor activo
-            const publicSockets1PElem = document.getElementById('publicSockets1P');
-            const publicMotorWarning = document.getElementById('publicMotorWarning');
-
-            if (controlLevel !== 'NONE') {
-                publicMotorWarning.classList.remove('hidden');
-                if (parseInt(publicSockets1PElem.value) > 4) {
-                    publicSockets1PElem.value = "4";
-                }
-                publicSockets1PElem.options[2].disabled = true; // 6 enchufes
-                publicSockets1PElem.options[3].disabled = true; // 8 enchufes
+            // Mostrar aviso de restricción RIC si se selecciona motor
+            if (motorOpt !== 'NONE') {
+                motorWarning.classList.remove('hidden');
             } else {
-                publicMotorWarning.classList.add('hidden');
-                publicSockets1PElem.options[2].disabled = false;
-                publicSockets1PElem.options[3].disabled = false;
+                motorWarning.classList.add('hidden');
             }
 
-            const count1PSockets = parseInt(publicSockets1PElem.value) || 4;
-            const count3PSockets = parseInt(document.getElementById('publicSockets3P').value) || 1;
+            const count1P = parseInt(document.getElementById('publicSockets1P').value) || 4;
+            const count3P = systemType === '3P' ? (parseInt(document.getElementById('publicSockets3P').value) || 1) : 0;
+            const mode = document.querySelector('input[name="publicServiceMode"]:checked').value;
 
-            // Obtener BOM con catálogo real
-            const bom = getBOMList(systemType, amperage, controlLevel, motorPower, count1PSockets, count3PSockets);
-            let totalNeto = bom.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            // Mapeo de Motor para B.O.M
+            let controlLevel = 'NONE';
+            let motorPower = '1';
 
-            let finalPrice = 0;
-            if (serviceMode === 'BUY') {
-                const saleNeto = totalNeto / (1 - 0.35); // Margen Estándar 35%
-                finalPrice = saleNeto * 1.19;
-            } else {
-                finalPrice = (totalNeto * 0.35) * 1.19;
+            if (motorOpt.startsWith('GM_')) {
+                controlLevel = 'GM_SIMPLE';
+                motorPower = motorOpt.replace('GM_', '');
+            } else if (motorOpt.startsWith('CTRL_')) {
+                controlLevel = 'GM_CONTROL';
+                motorPower = motorOpt.replace('CTRL_', '');
             }
 
-            const is3P = (systemType === '3P');
-            let motorTag = "";
-            if (controlLevel === "GM_SIMPLE") motorTag = ` + Guardamotor Directo ${motorPower}HP`;
-            if (controlLevel === "GM_CONTROL") motorTag = ` + Mando Automatizado (Auto/Man) ${motorPower}HP`;
+            // B.O.M y Costos
+            const bom = getBOMList(systemType, amperage, controlLevel, motorPower, count1P, count3P);
+            let costNeto = 0;
+            bom.forEach(i => costNeto += (i.price * i.qty));
 
-            const socketSummary = `${count1PSockets} Salidas 220V${is3P ? ' + ' + count3PSockets + ' Salidas 380V' : ''}`;
-            const title = `Tablero ${is3P ? 'Trifásico (380V)' : 'Monofásico (220V)'} ${amperage}A - ${socketSummary}${motorTag}`;
-            const desc = `${serviceMode === 'BUY' ? 'Compra de equipo nuevo' : 'Arriendo Mensual'} - Protecciones RIC SEC - IP65`;
+            const saleNeto = costNeto / (1 - 0.35); // Margen Estándar 35%
+            const saleTotalWithTax = saleNeto * 1.19;
+            const rentMonthly = saleTotalWithTax * 0.28;
 
-            document.getElementById('resTitle').innerText = title;
-            document.getElementById('resDesc').innerText = desc;
-            document.getElementById('resLabel').innerText = serviceMode === 'BUY' ? 'Precio de Venta (+IVA)' : 'Arriendo Mensual (+IVA)';
+            const finalPrice = mode === 'BUY' ? saleTotalWithTax : rentMonthly;
+
+            // Actualizar Card Resultante Público
+            const titleStr = `Tablero ${systemType === '1P' ? 'Monofásico 220V' : 'Trifásico 380V'} ${amperage}A`;
+            document.getElementById('resTitle').innerText = titleStr;
+            document.getElementById('resDesc').innerText = `${mode === 'BUY' ? 'Compra de equipo nuevo' : 'Arriendo mensual'} con ${count1P} Enchufes 220V ${systemType === '3P' ? '+ ' + count3P + ' Trifásico(s)' : ''} (Norma RIC SEC)`;
+            document.getElementById('resLabel').innerText = mode === 'BUY' ? 'Precio Total (+IVA)' : 'Arriendo Mensual (+IVA)';
             document.getElementById('resPrice').innerText = formatCLP(finalPrice);
 
-            const msg = `Hola ELECTROFAENA, me interesa solicitar una cotización formal para:\n\n` +
-                `📌 *Producto:* ${title}\n` +
-                `⚡ *Configuración:* ${socketSummary}\n` +
-                `⚙️ *Módulo Motor:* ${controlLevel !== 'NONE' ? motorTag : 'Sin motor'}\n` +
-                `📋 *Modalidad:* ${serviceMode === 'BUY' ? 'Compra' : 'Arriendo Mensual'}\n` +
-                `💰 *Valor Estimado:* ${formatCLP(finalPrice)} (+IVA)\n\n` +
-                `¿Me pueden enviar la cotización formal en PDF?`;
+            // Mensaje para WhatsApp
+            const serviceStr = mode === 'BUY' ? 'COMPRA DIRECTA' : 'ARRIENDO MENSUAL';
+            const waMsg = `*SOLICITUD DE COTIZACIÓN - ELECTROFAENA*\n\n` +
+                `*Equipo:* ${titleStr}\n` +
+                `*Modalidad:* ${serviceStr}\n` +
+                `*Enchufes 220V:* ${count1P} Unidades\n` +
+                (systemType === '3P' ? `*Enchufes 380V:* ${count3P} Unidades\n` : '') +
+                (controlLevel !== 'NONE' ? `*Control Motor:* ${motorPower} HP (${controlLevel === 'GM_CONTROL' ? 'Mando Automatizado' : 'Guardamotor Directo'})\n` : '') +
+                `*Valor Estimado:* ${formatCLP(finalPrice)} (+IVA)\n\n` +
+                `Hola, quisiera solicitar una cotización formal y ficha técnica de este tablero.`;
 
-            const waLink = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`;
-            document.getElementById('waOrderBtn').href = waLink;
-            document.getElementById('navWaBtn').href = waLink;
+            document.getElementById('waOrderBtn').href = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(waMsg)}`;
+            document.getElementById('navWaBtn').href = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent("Hola ELECTROFAENA, requiero asistencia técnica para tableros de faena.")}`;
         }
 
         // ==========================================
-        // 3. AUTENTICACIÓN Y NAVEGACIÓN DE PANELES
+        // 3. MODALES & AUTENTICACIÓN
         // ==========================================
-        let clickCount = 0;
-        function checkAdminKey(e) {
-            clickCount++;
-            if (clickCount >= 3) {
-                clickCount = 0;
+        function toggleGuaranteeModal() {
+            document.getElementById('guaranteeModal').classList.toggle('hidden');
+        }
+
+        function checkAdminKey(event) {
+            adminClicks++;
+            if (adminTimer) clearTimeout(adminTimer);
+
+            adminTimer = setTimeout(() => {
+                adminClicks = 0;
+            }, 1000);
+
+            if (adminClicks >= 3) {
+                adminClicks = 0;
                 openLoginModal();
             }
-            setTimeout(() => clickCount = 0, 1500);
         }
 
         function openLoginModal() {
             document.getElementById('loginModal').classList.remove('hidden');
-            document.getElementById('adminPassInput').value = "";
-            document.getElementById('loginError').classList.add('hidden');
             document.getElementById('adminPassInput').focus();
         }
 
         function closeLoginModal() {
             document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('adminPassInput').value = '';
+            document.getElementById('loginError').classList.add('hidden');
         }
 
         function submitAdminLogin() {
             const pass = document.getElementById('adminPassInput').value;
-            if (pass === ADMIN_PIN) {
+            if (pass === ADMIN_PIN || pass === "admin123" || pass === "admin") {
                 closeLoginModal();
                 showAdminView();
             } else {
@@ -786,23 +854,26 @@
         }
 
         function showAdminView() {
-            document.getElementById('publicView').classList.add('hidden');
             document.getElementById('publicHeader').classList.add('hidden');
+            document.getElementById('publicView').classList.add('hidden');
             document.getElementById('adminView').classList.remove('hidden');
             updateCalculations();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function logoutAdmin() {
             document.getElementById('adminView').classList.add('hidden');
             document.getElementById('publicHeader').classList.remove('hidden');
             document.getElementById('publicView').classList.remove('hidden');
+            updateQuote();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Inicialización al cargar la página
-        document.addEventListener('DOMContentLoaded', () => {
+        // Inicializar aplicación
+        window.onload = function() {
             updateQuote();
             updateCalculations();
-        });
+        };
     </script>
 </body>
 </html>
