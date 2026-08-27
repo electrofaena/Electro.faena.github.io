@@ -33,13 +33,13 @@
         <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
             <!-- Logo con trigger secreto (3 clics) -->
             <div class="flex items-center gap-2.5 cursor-pointer select-none" onclick="checkAdminKey(event)" title="Haz 3 clics para acceso de Administrador">
-                <div class="bg-gradient-to-tr from-blue-600 to-cyan-400 p-2 rounded-xl text-white font-bold text-base shadow-lg shadow-blue-500/20">
+                <div class="bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 p-2 rounded-xl text-slate-950 font-extrabold text-base shadow-lg shadow-amber-500/20">
                     <i class="fa-solid fa-bolt-lightning"></i>
                 </div>
                 <div>
                     <span class="font-extrabold text-base tracking-tight text-white flex items-center gap-1.5">
-                        ELECTRO<span class="text-blue-500">FAENA</span>
-                        <span class="text-[9px] bg-blue-500/10 text-blue-400 border border-blue-500/30 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">SEC RIC</span>
+                        ELECTRO<span class="text-amber-400">FAENA</span>
+                        <span class="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">SEC RIC</span>
                     </span>
                     <span class="block text-[10px] text-slate-400 font-medium">Normativa RIC / SEC - Certificado</span>
                 </div>
@@ -66,38 +66,42 @@
     <!-- Header Público -->
     <header id="publicHeader" class="border-b border-slate-800/80 px-4 py-6 text-center bg-slate-900/40 no-print">
         <div class="max-w-xl mx-auto space-y-2">
-            <span class="bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider inline-block">
-                Fabricación & Arriendo de Tableros
+            <span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider inline-block shadow-sm shadow-amber-500/10">
+                <i class="fa-solid fa-bolt mr-1"></i> Fabricación & Arriendo de Tableros
             </span>
             <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Cotiza tu Tablero de Faena o Control
             </h1>
             <p class="text-xs text-slate-400 leading-relaxed">
-                Todos nuestros equipos cumplen estrictamente con <strong>Norma RIC N°02/10 SEC</strong> con protecciones independientes por circuito.
+                Todos nuestros equipos cumplen strictly con <strong class="text-amber-400">Norma RIC N°02/10 SEC</strong> con protecciones independientes por circuito.
             </p>
         </div>
     </header>
 
     <!-- VISTA PÚBLICA (COTIZADOR) -->
     <main id="publicView" class="flex-1 max-w-3xl w-full mx-auto p-4 space-y-6 no-print">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-7 shadow-2xl space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-7 shadow-2xl space-y-6 relative overflow-hidden">
+            <!-- Linea de Acento Amarillo Superior -->
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600"></div>
 
             <!-- 1. Red -->
             <div class="space-y-2">
-                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">1. Tipo de Alimentación</label>
+                <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-bolt"></i> 1. Tipo de Alimentación
+                </label>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <label class="cursor-pointer">
                         <input type="radio" name="publicSystemType" value="1P" checked onchange="updateQuote()" class="peer sr-only">
-                        <div class="p-4 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 transition text-center space-y-1 hover:border-slate-700">
-                            <i class="fa-solid fa-plug text-2xl text-slate-500 block mb-1"></i>
+                        <div class="p-4 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/10 peer-checked:text-amber-300 transition text-center space-y-1 hover:border-slate-700 shadow-sm">
+                            <i class="fa-solid fa-plug text-2xl text-slate-500 block mb-1 peer-checked:text-amber-400"></i>
                             <span class="font-bold text-sm text-slate-200 block">Monofásico (220V)</span>
                         </div>
                     </label>
 
                     <label class="cursor-pointer">
                         <input type="radio" name="publicSystemType" value="3P" onchange="updateQuote()" class="peer sr-only">
-                        <div class="p-4 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 transition text-center space-y-1 hover:border-slate-700">
-                            <i class="fa-solid fa-industry text-2xl text-slate-500 block mb-1"></i>
+                        <div class="p-4 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/10 peer-checked:text-amber-300 transition text-center space-y-1 hover:border-slate-700 shadow-sm">
+                            <i class="fa-solid fa-industry text-2xl text-slate-500 block mb-1 peer-checked:text-amber-400"></i>
                             <span class="font-bold text-sm text-slate-200 block">Trifásico (380V)</span>
                         </div>
                     </label>
@@ -106,28 +110,30 @@
 
             <!-- 2. Capacidad -->
             <div class="space-y-2">
-                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">2. Capacidad de Protección Principal</label>
+                <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-gauge-high"></i> 2. Capacidad de Protección Principal
+                </label>
                 <div class="flex flex-col sm:flex-row justify-center items-stretch gap-3 w-full">
                     <label class="cursor-pointer flex-1 min-w-[140px]">
                         <input type="radio" name="publicAmperage" value="32" checked onchange="updateQuote()" class="peer sr-only">
-                        <div class="h-full p-4 text-center rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 transition shadow-sm flex flex-col items-center justify-center gap-1 hover:border-slate-700">
-                            <span class="text-lg font-black font-mono text-white peer-checked:text-blue-400">32 Amperes</span>
+                        <div class="h-full p-4 text-center rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/10 peer-checked:text-amber-300 transition shadow-sm flex flex-col items-center justify-center gap-1 hover:border-slate-700">
+                            <span class="text-lg font-black font-mono text-white peer-checked:text-amber-300">32 Amperes</span>
                             <span class="text-xs text-slate-400 font-medium">Faena Ligera</span>
                         </div>
                     </label>
 
                     <label class="cursor-pointer flex-1 min-w-[140px]">
                         <input type="radio" name="publicAmperage" value="40" onchange="updateQuote()" class="peer sr-only">
-                        <div class="h-full p-4 text-center rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 transition shadow-sm flex flex-col items-center justify-center gap-1 hover:border-slate-700">
-                            <span class="text-lg font-black font-mono text-white peer-checked:text-blue-400">40 Amperes</span>
+                        <div class="h-full p-4 text-center rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/10 peer-checked:text-amber-300 transition shadow-sm flex flex-col items-center justify-center gap-1 hover:border-slate-700">
+                            <span class="text-lg font-black font-mono text-white peer-checked:text-amber-300">40 Amperes</span>
                             <span class="text-xs text-slate-400 font-medium">Obra Estándar</span>
                         </div>
                     </label>
 
                     <label class="cursor-pointer flex-1 min-w-[140px]" id="public63aWrapper">
                         <input type="radio" name="publicAmperage" id="public63aInput" value="63" onchange="updateQuote()" class="peer sr-only">
-                        <div class="h-full p-4 text-center rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 transition shadow-sm flex flex-col items-center justify-center gap-1 hover:border-slate-700">
-                            <span class="text-lg font-black font-mono text-white peer-checked:text-blue-400">63 Amperes</span>
+                        <div class="h-full p-4 text-center rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/10 peer-checked:text-amber-300 transition shadow-sm flex flex-col items-center justify-center gap-1 hover:border-slate-700">
+                            <span class="text-lg font-black font-mono text-white peer-checked:text-amber-300">63 Amperes</span>
                             <span class="text-xs text-slate-400 font-medium">Distribución Pesada</span>
                         </div>
                     </label>
@@ -135,13 +141,13 @@
             </div>
 
             <!-- 3. Cantidad de Enchufes -->
-            <div class="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+            <div class="space-y-3 bg-slate-950 p-4 rounded-xl border border-amber-500/20 shadow-inner">
                 <div class="flex justify-between items-center">
-                    <label class="block text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-plug-circle-bolt text-blue-400"></i> 3. Cantidad de Salidas / Enchufes
+                    <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-plug-circle-bolt text-amber-400"></i> 3. Cantidad de Salidas / Enchufes
                     </label>
-                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
-                        <i class="fa-solid fa-shield-check"></i> Cumplimiento RIC N°02 / SEC
+                    <span class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-shield-check"></i> Cumplimiento RIC N°02 SEC
                     </span>
                 </div>
 
@@ -149,7 +155,7 @@
                     <!-- Enchufes 220V Monofásicos -->
                     <div>
                         <label class="block text-[11px] text-slate-400 font-medium mb-1">Enchufes Monofásicos (220V - 16A Industrial)</label>
-                        <select id="publicSockets1P" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                        <select id="publicSockets1P" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
                             <option value="2">2 Enchufes 220V (1 Diferencial 30mA dedicado)</option>
                             <option value="4" selected>4 Enchufes 220V (2 Diferenciales 30mA independientes)</option>
                             <option value="6">6 Enchufes 220V (3 Diferenciales 30mA independientes)</option>
@@ -160,7 +166,7 @@
                     <!-- Enchufes 380V Trifásicos -->
                     <div id="publicSockets3PWrapper">
                         <label class="block text-[11px] text-slate-400 font-medium mb-1">Enchufes Trifásicos (380V - Industrial IP67)</label>
-                        <select id="publicSockets3P" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                        <select id="publicSockets3P" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
                             <option value="1" selected>1 Enchufe Trifásico 32A (1 Diferencial Tetrapolar)</option>
                             <option value="2">2 Enchufes Trifásicos 32A (2 Diferenciales Tetrapolares)</option>
                             <option value="3">3 Enchufes Trifásicos 32A (3 Diferenciales Tetrapolares - Gabinete XL)</option>
@@ -174,8 +180,10 @@
 
             <!-- 4. Guardamotor / Motor -->
             <div class="space-y-2">
-                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">4. Módulo opcional de Protección / Mando de Motor</label>
-                <select id="publicMotorOption" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-gears"></i> 4. Módulo opcional de Protección / Mando de Motor
+                </label>
+                <select id="publicMotorOption" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
                     <option value="NONE">Sin Mando Motor (Solo distribución de enchufes industriales)</option>
                     <option value="GM_1">Partidor Guardamotor Directo - Motor 1.0 HP (0.75 kW)</option>
                     <option value="GM_2">Partidor Guardamotor Directo - Motor 2.0 HP (1.5 kW)</option>
@@ -193,7 +201,9 @@
 
             <!-- 5. Modalidad -->
             <div class="space-y-2 border-t border-slate-800 pt-4">
-                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">5. Modalidad del Servicio</label>
+                <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-handshake"></i> 5. Modalidad del Servicio
+                </label>
                 <div class="grid grid-cols-2 gap-3">
                     <label class="cursor-pointer">
                         <input type="radio" name="publicServiceMode" value="BUY" checked onchange="updateQuote()" class="peer sr-only">
@@ -203,7 +213,7 @@
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="publicServiceMode" value="RENT" onchange="updateQuote()" class="peer sr-only">
-                        <div class="p-3 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-purple-500 peer-checked:bg-purple-600/10 peer-checked:text-purple-400 transition text-center font-bold text-xs">
+                        <div class="p-3 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/10 peer-checked:text-amber-300 transition text-center font-bold text-xs">
                             <i class="fa-solid fa-calendar-days mr-1"></i> Arriendo Mensual
                         </div>
                     </label>
@@ -211,19 +221,22 @@
             </div>
 
             <!-- Card de Cotización Resultante -->
-            <div class="bg-slate-950 rounded-xl p-5 border border-slate-800 space-y-4">
+            <div class="bg-slate-950 rounded-xl p-5 border border-amber-500/30 space-y-4 shadow-lg shadow-amber-500/5 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none"></div>
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
                     <div>
-                        <h2 class="font-bold text-base text-white" id="resTitle">Tablero Monofásico 32A</h2>
+                        <h2 class="font-bold text-base text-white flex items-center gap-2" id="resTitle">
+                            Tablero Monofásico 32A
+                        </h2>
                         <p class="text-xs text-slate-400" id="resDesc">Compra de equipo nuevo - Gabinete IP65 Hermético</p>
                     </div>
                     <div class="text-right">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase block" id="resLabel">Precio (+IVA)</span>
-                        <span class="text-2xl font-black text-emerald-400 font-mono" id="resPrice">$0</span>
+                        <span class="text-[10px] font-bold text-amber-400 uppercase block" id="resLabel">Precio (+IVA)</span>
+                        <span class="text-2xl font-black text-amber-400 font-mono" id="resPrice">$0</span>
                     </div>
                 </div>
 
-                <a id="waOrderBtn" href="#" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-xs shadow-xl shadow-emerald-600/20 active:scale-[0.98]">
+                <a id="waOrderBtn" href="#" target="_blank" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-xs shadow-xl shadow-amber-500/20 active:scale-[0.98]">
                     <i class="fa-brands fa-whatsapp text-base"></i> Solicitar Cotización Formal por WhatsApp
                 </a>
             </div>
@@ -235,9 +248,10 @@
     <main id="adminView" class="hidden flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
         
         <!-- Header del Panel de Control -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-2xl">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600"></div>
             <div class="flex items-center gap-3">
-                <div class="bg-blue-600 p-3 rounded-xl text-white font-bold text-xl shadow-lg shadow-blue-500/20">
+                <div class="bg-amber-500 p-3 rounded-xl text-slate-950 font-bold text-xl shadow-lg shadow-amber-500/20">
                     <i class="fa-solid fa-calculator"></i>
                 </div>
                 <div>
@@ -267,7 +281,7 @@
             <!-- Panel de Configuración Interna -->
             <section class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-5 no-print">
                 <div class="border-b border-slate-800 pb-3">
-                    <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2">
+                    <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
                         <i class="fa-solid fa-sliders"></i> Parámetros de Insumos & Margen
                     </h3>
                     <p class="text-xs text-slate-400">Costos a Precio de Mercado Mayorista / Ferretería</p>
@@ -280,13 +294,13 @@
                         <div class="grid grid-cols-2 gap-2">
                             <label class="cursor-pointer">
                                 <input type="radio" name="systemType" value="1P" checked onchange="updateCalculations()" class="peer sr-only">
-                                <div class="p-2.5 text-center text-xs rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/20 peer-checked:text-blue-400 font-bold transition">
+                                <div class="p-2.5 text-center text-xs rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/20 peer-checked:text-amber-300 font-bold transition">
                                     Monofásico (220V)
                                 </div>
                             </label>
                             <label class="cursor-pointer">
                                 <input type="radio" name="systemType" value="3P" onchange="updateCalculations()" class="peer sr-only">
-                                <div class="p-2.5 text-center text-xs rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-blue-500 peer-checked:bg-blue-600/20 peer-checked:text-blue-400 font-bold transition">
+                                <div class="p-2.5 text-center text-xs rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/20 peer-checked:text-amber-300 font-bold transition">
                                     Trifásico (380V)
                                 </div>
                             </label>
@@ -348,9 +362,9 @@
                     <div class="border-t border-slate-800 pt-3">
                         <div class="flex justify-between items-center mb-1">
                             <label class="block text-xs font-semibold text-slate-300">Margen Objetivo sobre Venta (%)</label>
-                            <span id="targetMarginLabel" class="text-xs font-bold text-blue-400">35%</span>
+                            <span id="targetMarginLabel" class="text-xs font-bold text-amber-400">35%</span>
                         </div>
-                        <input type="number" id="targetMargin" value="35" min="10" max="80" oninput="updateCalculations()" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-blue-400 font-bold focus:outline-none focus:border-blue-500">
+                        <input type="number" id="targetMargin" value="35" min="10" max="80" oninput="updateCalculations()" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-amber-400 font-bold focus:outline-none focus:border-amber-500">
                     </div>
                 </form>
             </section>
@@ -360,7 +374,7 @@
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl print-card space-y-4">
                     <div class="flex justify-between items-start border-b border-slate-800 pb-3">
                         <div>
-                            <span class="text-[10px] font-extrabold text-blue-400 uppercase tracking-wider">CÁLCULO CON COSTO FERRETERÍA / MERCADO</span>
+                            <span class="text-[10px] font-extrabold text-amber-400 uppercase tracking-wider">CÁLCULO CON COSTO FERRETERÍA / MERCADO</span>
                             <h2 class="text-xl font-bold text-white" id="panelTitle">Tablero Monofásico 32A</h2>
                             <p class="text-xs text-slate-400" id="panelSubtitle">Alimentación 220V - Faena y Distribución</p>
                         </div>
@@ -721,7 +735,7 @@
                     <td class="p-2 text-right">${formatCLP(item.price)}</td>
                     <td class="p-2 text-right font-bold text-slate-100">${formatCLP(item.price * item.qty)}</td>
                     <td class="p-2 text-center no-print">
-                        <a href="${item.link}" target="_blank" class="bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white px-2 py-1 rounded text-[10px] transition inline-flex items-center gap-1">
+                        <a href="${item.link}" target="_blank" class="bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 px-2 py-1 rounded text-[10px] font-bold transition inline-flex items-center gap-1">
                             <i class="fa-solid fa-cart-shopping text-[9px]"></i> Ver
                         </a>
                     </td>
@@ -797,18 +811,23 @@
             document.getElementById('resPrice').innerText = formatCLP(finalPrice);
 
             // Mensaje para WhatsApp
-            const serviceStr = mode === 'BUY' ? 'COMPRA DIRECTA' : 'ARRIENDO MENSUAL';
-            const waMsg = `*SOLICITUD DE COTIZACIÓN - ELECTROFAENA*\n\n` +
-                `*Equipo:* ${titleStr}\n` +
-                `*Modalidad:* ${serviceStr}\n` +
-                `*Enchufes 220V:* ${count1P} Unidades\n` +
-                (systemType === '3P' ? `*Enchufes 380V:* ${count3P} Unidades\n` : '') +
-                (controlLevel !== 'NONE' ? `*Control Motor:* ${motorPower} HP (${controlLevel === 'GM_CONTROL' ? 'Mando Automatizado' : 'Guardamotor Directo'})\n` : '') +
-                `*Valor Estimado:* ${formatCLP(finalPrice)} (+IVA)\n\n` +
-                `Hola, quisiera solicitar una cotización formal y ficha técnica de este tablero.`;
+            let productDetail = `Tablero ${systemType === '1P' ? 'Monofásico (220V)' : 'Trifásico (380V)'} ${amperage}A`;
+            if (controlLevel === 'GM_CONTROL') {
+                productDetail += ` + Control Auto/Man ${motorPower}HP`;
+            } else if (controlLevel === 'GM_SIMPLE') {
+                productDetail += ` + Guardamotor Directo ${motorPower}HP`;
+            }
+
+            const modeStr = mode === 'BUY' ? 'Compra' : 'Arriendo';
+
+            const waMsg = `Hola SpA Tableros, me interesa solicitar una cotización formal para:\n\n` +
+                `📌 Producto: ${productDetail}\n` +
+                `📋 Modalidad: ${modeStr}\n` +
+                `💰 Valor Estimado: ${formatCLP(finalPrice)} (+IVA)\n\n` +
+                `¿Me pueden enviar la cotización formal en PDF?`;
 
             document.getElementById('waOrderBtn').href = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(waMsg)}`;
-            document.getElementById('navWaBtn').href = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent("Hola ELECTROFAENA, requiero asistencia técnica para tableros de faena.")}`;
+            document.getElementById('navWaBtn').href = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent("Hola SpA Tableros, requiero asistencia técnica para tableros de faena.")}`;
         }
 
         // ==========================================
