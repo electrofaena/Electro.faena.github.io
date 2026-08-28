@@ -183,25 +183,122 @@
                 </p>
             </div>
 
-            <!-- 4. Guardamotor / Motor -->
-            <div class="space-y-2">
-                <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fa-solid fa-gears"></i> 4. Módulo Opcional Mando / Motor
-                </label>
-                <select id="publicMotorOption" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 sm:p-3 text-xs text-slate-200 focus:outline-none focus:border-amber-500 truncate">
-                    <option value="NONE">Sin Mando Motor (Solo distribución de enchufes)</option>
-                    <option value="GM_1">Partidor Guardamotor Directo - Motor 1.0 HP (0.75 kW)</option>
-                    <option value="GM_2">Partidor Guardamotor Directo - Motor 2.0 HP (1.5 kW)</option>
-                    <option value="GM_3">Partidor Guardamotor Directo - Motor 3.0 HP (2.2 kW)</option>
-                    <option value="CTRL_1">Mando Automatizado (Guardamotor + Contactor Auto/Man) 1.0 HP</option>
-                    <option value="CTRL_2">Mando Automatizado (Guardamotor + Contactor Auto/Man) 2.0 HP</option>
-                    <option value="CTRL_3">Mando Automatizado (Guardamotor + Contactor Auto/Man) 3.0 HP</option>
-                </select>
-                <!-- Indicador Normativo de Restricción cuando hay Motor -->
-                <div id="publicMotorWarning" class="hidden p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-[11px] text-amber-300 flex items-start gap-2">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-0.5 shrink-0"></i>
-                    <span><strong>Restricción Normativa RIC SEC:</strong> Al incluir mando/guardamotor, la cantidad de salidas se limita automáticamente a máx. 2 Monofásicos y 1 Trifásico para preservar el espacio DIN y evitar sobrecalentamiento térmico.</span>
+            <!-- 4. Cargas especiales: motores y bombas -->
+            <div class="space-y-3 bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-amber-500/20 shadow-inner">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                    <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-gears"></i> 4. Cargas Especiales
+                    </label>
+                    <span class="text-[9px] sm:text-[10px] bg-blue-500/10 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded-full font-bold">
+                        Configuración técnica
+                    </span>
                 </div>
+
+                <!-- Motores -->
+                <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-gears text-amber-400"></i> Motores
+                        </span>
+                        <span class="text-[9px] text-slate-500">Circuitos independientes</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-1">Monofásicos</label>
+                            <select id="publicMotor1PQty" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                                <option value="0" selected>0 motores</option>
+                                <option value="1">1 motor</option><option value="2">2 motores</option>
+                                <option value="3">3 motores</option><option value="4">4 motores</option>
+                                <option value="5">5 motores</option><option value="6">6 motores</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-1">Potencia</label>
+                            <select id="publicMotor1PHPower" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                                <option value="1">1 HP</option><option value="2">2 HP</option><option value="3">3 HP</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-1">Trifásicos</label>
+                            <select id="publicMotor3PQty" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                                <option value="0" selected>0 motores</option>
+                                <option value="1">1 motor</option><option value="2">2 motores</option>
+                                <option value="3">3 motores</option><option value="4">4 motores</option>
+                                <option value="5">5 motores</option><option value="6">6 motores</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-1">Potencia</label>
+                            <select id="publicMotor3PHPower" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                                <option value="1">1 HP</option><option value="2">2 HP</option><option value="3">3 HP</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bombas -->
+                <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-droplet text-blue-400"></i> Bombas de agua
+                        </span>
+                        <span class="text-[9px] text-slate-500">Circuitos independientes</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-1">Monofásicas</label>
+                            <select id="publicPump1PQty" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                                <option value="0" selected>0 bombas</option>
+                                <option value="1">1 bomba</option><option value="2">2 bombas</option>
+                                <option value="3">3 bombas</option><option value="4">4 bombas</option>
+                                <option value="5">5 bombas</option><option value="6">6 bombas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-1">Potencia</label>
+                            <select id="publicPump1PHPower" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                                <option value="1">1 HP</option><option value="2">2 HP</option><option value="3">3 HP</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-1">Trifásicas</label>
+                            <select id="publicPump3PQty" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                                <option value="0" selected>0 bombas</option>
+                                <option value="1">1 bomba</option><option value="2">2 bombas</option>
+                                <option value="3">3 bombas</option><option value="4">4 bombas</option>
+                                <option value="5">5 bombas</option><option value="6">6 bombas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-1">Potencia</label>
+                            <select id="publicPump3PHPower" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                                <option value="1">1 HP</option><option value="2">2 HP</option><option value="3">3 HP</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Método de arranque -->
+                <div>
+                    <label class="block text-[10px] text-slate-400 mb-1">Método de arranque / control</label>
+                    <select id="publicStartMethod" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                        <option value="DIRECT">Arranque directo</option>
+                        <option value="CONTACTOR">Contactor + relé térmico</option>
+                        <option value="VFD">Variador de frecuencia</option>
+                        <option value="SOFTSTART">Partidor suave</option>
+                    </select>
+                </div>
+
+                <div id="publicLoadWarning" class="hidden p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-[11px] text-amber-300 flex items-start gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-0.5 shrink-0"></i>
+                    <span id="publicLoadWarningText"></span>
+                </div>
+
+                <p class="text-[10px] text-slate-500 italic">
+                    * La selección de HP es una estimación preliminar. La protección definitiva debe verificarse con los datos de placa, corriente nominal, tensión y método de arranque del equipo.
+                </p>
             </div>
 
             <!-- 5. Modalidad -->
@@ -239,6 +336,13 @@
                         <span class="text-[10px] font-bold text-amber-400 uppercase block" id="resLabel">Precio (+IVA)</span>
                         <span class="text-xl sm:text-2xl font-black text-amber-400 font-mono" id="resPrice">$0</span>
                     </div>
+                </div>
+
+                <div id="publicTechnicalSummary" class="bg-slate-900/70 rounded-xl p-3 border border-slate-800 text-[10px] text-slate-400">
+                    <div class="flex items-center gap-2 text-slate-200 font-bold mb-1">
+                        <i class="fa-solid fa-list-check text-amber-400"></i> Resumen técnico preliminar
+                    </div>
+                    <div id="publicTechnicalSummaryText">Configuración inicial.</div>
                 </div>
 
                 <a id="waOrderBtn" href="#" target="_blank" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-3 sm:py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-xs shadow-xl shadow-amber-500/20 active:scale-[0.98]">
@@ -491,7 +595,7 @@
             </div>
 
             <div class="space-y-2">
-                <input type="password" id="adminPassInput" placeholder="Contraseña (1234)" onkeyup="if(event.key==='Enter') submitAdminLogin()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white text-center font-mono focus:outline-none focus:border-blue-500">
+                <input type="password" id="adminPassInput" placeholder="Contraseña privada" onkeyup="if(event.key==='Enter') submitAdminLogin()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white text-center font-mono focus:outline-none focus:border-blue-500">
                 <p id="loginError" class="hidden text-[11px] text-red-400 text-center font-bold">Contraseña incorrecta</p>
             </div>
 
@@ -566,6 +670,12 @@
                 "2": { name: "Contactor 12A 220VAC", price: 10050, link: "https://www.ferrelectrica.cl/product/contactor-d1210m7-12a-1no-ip20-lexo" },
                 "3": { name: "Contactor 18A 220VAC", price: 11086, link: "https://www.ferrelectrica.cl/product/contactor-d1810m7-18a-1no-ip20-lexo" }
             },
+            MOTOR_CONTROL: {
+                DIRECT: { name: "Control de motor: arranque directo", price: 0, link: "#" },
+                CONTACTOR: { name: "Control de motor: contactor + relé térmico", price: 0, link: "#" },
+                VFD: { name: "Variador de frecuencia (precio por configurar)", price: 0, link: "#" },
+                SOFTSTART: { name: "Partidor suave (precio por configurar)", price: 0, link: "#" }
+            },
             MISC: {
                 SHUNT_RELEASE: { name: "Bobina de Disparo MX 220V AC", price: 8990, link: "https://www.ferrelectrica.cl/product/bobina-de-disparo-mx-220v-nxb-63" },
                 EMERGENCY_BUTTON: { name: "Botonera Parada Emergencia Seta NC", price: 6890, link: "https://www.easy.cl/tienda/search?w=botonera%20emergencia" },
@@ -577,72 +687,110 @@
             }
         };
 
-        function getBOMList(systemType, amperage, controlLevel, motorPower, count1P, count3P) {
+        function getBOMList(systemType, amperage, controlLevel, motorPower, count1P, count3P, loads = {}) {
             const list = [];
 
-            // 1. Gabinete metálico IP65 según volumen total de componentes
-            let cabinetKey = 'SMALL';
             const totalSockets = count1P + (systemType === '3P' ? count3P : 0);
-            if (controlLevel !== 'NONE' || totalSockets >= 6 || (systemType === '3P' && amperage === '63')) {
+            const totalLoads = (loads.motor1PQty || 0) + (loads.motor3PQty || 0) +
+                               (loads.pump1PQty || 0) + (loads.pump3PQty || 0);
+
+            // Gabinete según volumen aproximado de componentes.
+            let cabinetKey = 'SMALL';
+            const componentCount = totalSockets + totalLoads;
+            if (componentCount >= 8 || (systemType === '3P' && amperage === '63')) {
                 cabinetKey = 'XL';
-            } else if (totalSockets >= 4 || systemType === '3P') {
+            } else if (componentCount >= 5 || systemType === '3P') {
                 cabinetKey = 'LARGE';
-            } else if (totalSockets >= 2) {
+            } else if (componentCount >= 2) {
                 cabinetKey = 'MEDIUM';
             }
             list.push({ ...CATALOG_FULL.CABINETS[cabinetKey], qty: 1 });
 
-            // 2. Automático General
+            // Protección general.
             const autoKey = `${systemType}_${amperage}A`;
             if (CATALOG_FULL.AUTOMATICS[autoKey]) {
                 list.push({ ...CATALOG_FULL.AUTOMATICS[autoKey], qty: 1 });
             }
 
-            // 3. Diferencial General
+            // Diferencial general.
             const diffKey = `${systemType}_${amperage}A`;
             if (CATALOG_FULL.DIFFERENTIALS[diffKey]) {
                 list.push({ ...CATALOG_FULL.DIFFERENTIALS[diffKey], qty: 1 });
             }
 
-            // 4. Barras Repartidoras DIN
+            // Repartición y alimentación.
             const busKey = systemType === '1P' ? '2P_UP' : '4P_UP';
             list.push({ ...CATALOG_FULL.BUSBARS[busKey], qty: 1 });
-
-            // 5. Clavija / Enchufe Macho Alimentación
             list.push({ ...CATALOG_FULL.MALE_PLUGS[systemType], qty: 1 });
 
-            // 6. Enchufes Monofásicos y Protecciones Indiv. según RIC SEC
+            // Enchufes 1P.
             if (count1P > 0) {
                 list.push({ ...CATALOG_FULL.MISC.PLUG_CEE_1P, qty: count1P });
-                const auto1PQty = Math.ceil(count1P / 2);
-                list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: auto1PQty });
-                const diff1PQty = Math.ceil(count1P / 2);
-                list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: diff1PQty });
+                list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: Math.ceil(count1P / 2) });
+                list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: Math.ceil(count1P / 2) });
             }
 
-            // 7. Enchufes Trifásicos y Protecciones Indiv.
+            // Enchufes 3P.
             if (systemType === '3P' && count3P > 0) {
                 list.push({ ...CATALOG_FULL.MISC.PLUG_CEE_3P, qty: count3P });
                 list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_3P, qty: count3P });
                 list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P, qty: count3P });
             }
 
-            // 8. Guardamotor / Contactor / Mando Motor opcional
-            if (controlLevel !== 'NONE') {
-                const hpKey = motorPower || '1';
-                if (CATALOG_FULL.GUARDAMOTORS[hpKey]) {
-                    list.push({ ...CATALOG_FULL.GUARDAMOTORS[hpKey], qty: 1 });
-                }
-                if (controlLevel === 'GM_CONTROL') {
-                    if (CATALOG_FULL.CONTACTORS[hpKey]) {
-                        list.push({ ...CATALOG_FULL.CONTACTORS[hpKey], qty: 1 });
-                    }
-                    list.push({ ...CATALOG_FULL.MISC.CONTROL_PACK, qty: 1 });
-                }
-                list.push({ ...CATALOG_FULL.MISC.MOTOR_TERMINALS, qty: 1 });
+            // Cada carga especial se trata como circuito independiente.
+            const motor1PQty = loads.motor1PQty || 0;
+            const motor3PQty = loads.motor3PQty || 0;
+            const pump1PQty = loads.pump1PQty || 0;
+            const pump3PQty = loads.pump3PQty || 0;
+            const startMethod = loads.startMethod || 'DIRECT';
+
+            const special1P = motor1PQty + pump1PQty;
+            const special3P = motor3PQty + pump3PQty;
+
+            if (special1P > 0) {
+                list.push({
+                    ...CATALOG_FULL.AUTOMATICS.PROT_2P,
+                    qty: special1P
+                });
+                list.push({
+                    ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P,
+                    qty: special1P
+                });
             }
 
-            // 9. Elementos de Seguridad RIC SEC Obligatorios
+            if (systemType === '3P' && special3P > 0) {
+                list.push({
+                    ...CATALOG_FULL.AUTOMATICS.PROT_3P,
+                    qty: special3P
+                });
+                list.push({
+                    ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P,
+                    qty: special3P
+                });
+            }
+
+            if (totalLoads > 0) {
+                // Control común seleccionado para la etapa actual.
+                // El precio del VFD/partidor suave queda en 0 hasta configurar
+                // el modelo real y su precio en el catálogo.
+                list.push({ ...CATALOG_FULL.MOTOR_CONTROL[startMethod], qty: totalLoads });
+
+                // Accesorios de control para cada circuito.
+                if (startMethod === 'CONTACTOR') {
+                    list.push({ ...CATALOG_FULL.CONTACTORS['3'], qty: totalLoads });
+                    list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalLoads });
+                } else if (startMethod === 'DIRECT') {
+                    list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalLoads });
+                } else if (startMethod === 'SOFTSTART') {
+                    list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalLoads });
+                } else if (startMethod === 'VFD') {
+                    list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalLoads });
+                }
+
+                list.push({ ...CATALOG_FULL.MISC.MOTOR_TERMINALS, qty: totalLoads });
+            }
+
+            // Elementos auxiliares existentes.
             list.push({ ...CATALOG_FULL.MISC.EMERGENCY_BUTTON, qty: 1 });
             list.push({ ...CATALOG_FULL.MISC.PILOT_LIGHT, qty: systemType === '1P' ? 1 : 3 });
 
@@ -719,7 +867,7 @@
 
             document.getElementById('targetMarginLabel').innerText = targetMarginVal + "%";
 
-            const bom = getBOMList(systemType, amperage, controlLevel, motorPower, count1PSockets, count3PSockets);
+            const bom = getBOMList(systemType, amperage, controlLevel, motorPower, count1PSockets, count3PSockets, {});
             
             let totalCostNeto = 0;
             bom.forEach(item => {
@@ -777,97 +925,106 @@
             }
 
             const amperage = document.querySelector('input[name="publicAmperage"]:checked').value;
-            const motorOpt = document.getElementById('publicMotorOption').value;
-            const motorWarning = document.getElementById('publicMotorWarning');
-            const publicSockets1PElem = document.getElementById('publicSockets1P');
-            const publicSockets3PElem = document.getElementById('publicSockets3P');
-
-            if (motorOpt !== 'NONE') {
-                motorWarning.classList.remove('hidden');
-
-                // Restricción a máximo 2 enchufes monofásicos por norma RIC SEC cuando hay mando de motor
-                for (let opt of publicSockets1PElem.options) {
-                    if (parseInt(opt.value) > 2) {
-                        opt.disabled = true;
-                    } else {
-                        opt.disabled = false;
-                    }
-                }
-                if (parseInt(publicSockets1PElem.value) > 2) {
-                    publicSockets1PElem.value = "2";
-                }
-
-                // Restricción a máximo 1 enchufe trifásico
-                for (let opt of publicSockets3PElem.options) {
-                    if (parseInt(opt.value) > 1) {
-                        opt.disabled = true;
-                    } else {
-                        opt.disabled = false;
-                    }
-                }
-                if (parseInt(publicSockets3PElem.value) > 1) {
-                    publicSockets3PElem.value = "1";
-                }
-            } else {
-                motorWarning.classList.add('hidden');
-                
-                // Habilitar todas las opciones de enchufes cuando no se selecciona motor
-                for (let opt of publicSockets1PElem.options) {
-                    opt.disabled = false;
-                }
-                for (let opt of publicSockets3PElem.options) {
-                    opt.disabled = false;
-                }
-            }
-
-            const count1P = parseInt(document.getElementById('publicSockets1P').value) || 4;
-            const count3P = systemType === '3P' ? (parseInt(document.getElementById('publicSockets3P').value) || 1) : 0;
+            const count1P = parseInt(document.getElementById('publicSockets1P').value) || 0;
+            const count3P = systemType === '3P' ? (parseInt(document.getElementById('publicSockets3P').value) || 0) : 0;
             const mode = document.querySelector('input[name="publicServiceMode"]:checked').value;
+
+            const loads = {
+                motor1PQty: parseInt(document.getElementById('publicMotor1PQty').value) || 0,
+                motor1PHPower: parseInt(document.getElementById('publicMotor1PHPower').value) || 1,
+                motor3PQty: parseInt(document.getElementById('publicMotor3PQty').value) || 0,
+                motor3PHPower: parseInt(document.getElementById('publicMotor3PHPower').value) || 1,
+                pump1PQty: parseInt(document.getElementById('publicPump1PQty').value) || 0,
+                pump1PHPower: parseInt(document.getElementById('publicPump1PHPower').value) || 1,
+                pump3PQty: parseInt(document.getElementById('publicPump3PQty').value) || 0,
+                pump3PHPower: parseInt(document.getElementById('publicPump3PHPower').value) || 1,
+                startMethod: document.getElementById('publicStartMethod').value
+            };
+
+            const totalLoads = loads.motor1PQty + loads.motor3PQty + loads.pump1PQty + loads.pump3PQty;
+            const totalHP =
+                loads.motor1PQty * loads.motor1PHPower +
+                loads.motor3PQty * loads.motor3PHPower +
+                loads.pump1PQty * loads.pump1PHPower +
+                loads.pump3PQty * loads.pump3PHPower;
+
+            // Una carga trifásica requiere alimentación trifásica.
+            const needs3P = (loads.motor3PQty + loads.pump3PQty) > 0;
+            const warning = document.getElementById('publicLoadWarning');
+            const warningText = document.getElementById('publicLoadWarningText');
+
+            if (needs3P && systemType !== '3P') {
+                warning.classList.remove('hidden');
+                warningText.innerHTML = '<strong>Configuración:</strong> seleccionaste una carga trifásica. El tablero debe utilizar alimentación trifásica.';
+            } else if (totalLoads > 0 && totalHP > 6) {
+                warning.classList.remove('hidden');
+                warningText.innerHTML = '<strong>Revisión técnica:</strong> la carga total seleccionada supera 6 HP. Conviene revisar capacidad del tablero, simultaneidad, protecciones y método de arranque antes de emitir la cotización definitiva.';
+            } else if (loads.startMethod === 'VFD' && totalLoads > 1) {
+                warning.classList.remove('hidden');
+                warningText.innerHTML = '<strong>Variador de frecuencia:</strong> se seleccionó VFD para múltiples cargas. En la siguiente etapa conviene permitir configurar un variador individual por motor/bomba.';
+            } else {
+                warning.classList.add('hidden');
+                warningText.textContent = '';
+            }
 
             let controlLevel = 'NONE';
             let motorPower = '1';
-
-            if (motorOpt.startsWith('GM_')) {
-                controlLevel = 'GM_SIMPLE';
-                motorPower = motorOpt.replace('GM_', '');
-            } else if (motorOpt.startsWith('CTRL_')) {
-                controlLevel = 'GM_CONTROL';
-                motorPower = motorOpt.replace('CTRL_', '');
+            if (totalLoads > 0) {
+                controlLevel = loads.startMethod === 'CONTACTOR' ? 'GM_CONTROL' : 'GM_SIMPLE';
+                motorPower = '3';
             }
 
-            const bom = getBOMList(systemType, amperage, controlLevel, motorPower, count1P, count3P);
+            const bom = getBOMList(systemType, amperage, controlLevel, motorPower, count1P, count3P, loads);
             let costNeto = 0;
             bom.forEach(i => costNeto += (i.price * i.qty));
 
             const saleNeto = costNeto / (1 - 0.35);
             const saleTotalWithTax = saleNeto * 1.19;
             const rentMonthly = saleTotalWithTax * 0.28;
-
             const finalPrice = mode === 'BUY' ? saleTotalWithTax : rentMonthly;
 
             const titleStr = `Tablero ${systemType === '1P' ? 'Monofásico 220V' : 'Trifásico 380V'} ${amperage}A`;
             document.getElementById('resTitle').innerText = titleStr;
-            document.getElementById('resDesc').innerText = `${mode === 'BUY' ? 'Compra nuevo' : 'Arriendo'} con ${count1P} Enchufes 220V ${systemType === '3P' ? '+ ' + count3P + ' Trifásico(s)' : ''} (Norma RIC SEC)`;
+
+            const loadSummary = [];
+            if (loads.motor1PQty) loadSummary.push(`${loads.motor1PQty} motor(es) 1P ${loads.motor1PHPower} HP`);
+            if (loads.motor3PQty) loadSummary.push(`${loads.motor3PQty} motor(es) 3P ${loads.motor3PHPower} HP`);
+            if (loads.pump1PQty) loadSummary.push(`${loads.pump1PQty} bomba(s) 1P ${loads.pump1PHPower} HP`);
+            if (loads.pump3PQty) loadSummary.push(`${loads.pump3PQty} bomba(s) 3P ${loads.pump3PHPower} HP`);
+
+            document.getElementById('resDesc').innerText =
+                `${mode === 'BUY' ? 'Compra nuevo' : 'Arriendo'} · ${count1P} enchufes 220V` +
+                `${systemType === '3P' ? ` · ${count3P} enchufe(s) 380V` : ''}` +
+                `${loadSummary.length ? ' · ' + loadSummary.join(' · ') : ''}`;
+
             document.getElementById('resLabel').innerText = mode === 'BUY' ? 'Precio Total (+IVA)' : 'Arriendo Mensual (+IVA)';
             document.getElementById('resPrice').innerText = formatCLP(finalPrice);
 
             let productDetail = `Tablero ${systemType === '1P' ? 'Monofásico (220V)' : 'Trifásico (380V)'} ${amperage}A`;
-            if (controlLevel === 'GM_CONTROL') {
-                productDetail += ` + Control Auto/Man ${motorPower}HP`;
-            } else if (controlLevel === 'GM_SIMPLE') {
-                productDetail += ` + Guardamotor Directo ${motorPower}HP`;
-            }
+            if (count1P) productDetail += ` + ${count1P} enchufes 220V`;
+            if (systemType === '3P' && count3P) productDetail += ` + ${count3P} enchufes 380V`;
+            if (loadSummary.length) productDetail += ` + ${loadSummary.join(', ')}`;
+            productDetail += ` + ${document.getElementById('publicStartMethod').selectedOptions[0].text}`;
 
             const modeStr = mode === 'BUY' ? 'Compra' : 'Arriendo';
 
-            const waMsg = `Hola SpA Tableros, me interesa solicitar una cotización formal para:\n\n` +
+            const waMsg = `Hola ELECTROFAENA, me interesa solicitar una cotización formal para:\n\n` +
                 `📌 Producto: ${productDetail}\n` +
                 `📋 Modalidad: ${modeStr}\n` +
+                `⚡ Potencia de cargas seleccionadas: ${totalHP} HP aprox.\n` +
                 `💰 Valor Estimado: ${formatCLP(finalPrice)} (+IVA)\n\n` +
-                `¿Me pueden enviar la cotización formal en PDF?`;
+                `¿Me pueden enviar la cotización formal y validar la configuración técnica?`;
 
-            document.getElementById('waOrderBtn').href = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(waMsg)}`;
-            document.getElementById('navWaBtn').href = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent("Hola SpA Tableros, requiero asistencia técnica para tableros de faena.")}`;
+            document.getElementById('publicTechnicalSummaryText').innerText =
+                `${systemType === '1P' ? '220 V monofásico' : '380 V trifásico'} · ${amperage} A · ` +
+                `${count1P + count3P} salida(s) de enchufe · ${totalLoads} carga(s) especial(es) · ` +
+                `${totalHP} HP seleccionados · ${document.getElementById('publicStartMethod').selectedOptions[0].text}.`;
+
+            document.getElementById('waOrderBtn').href =
+                `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(waMsg)}`;
+
+            document.getElementById('navWaBtn').href =
+                `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent("Hola ELECTROFAENA, requiero asistencia técnica para un tablero de faena.")}`;
         }
 
         // ==========================================
