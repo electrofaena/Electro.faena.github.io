@@ -1225,3 +1225,313 @@
     </script>
 </body>
 </html>
+(function(){
+
+const groups = {
+
+admin: {
+
+motor1Qty: 'adminMotor1PQty', motor1Power: 'adminMotor1PHPower',
+
+motor3Qty: 'adminMotor3PQty', motor3Power: 'adminMotor3PHPower',
+
+pump1Qty: 'adminPump1PQty', pump1Power: 'adminPump1PHPower',
+
+pump3Qty: 'adminPump3PQty', pump3Power: 'adminPump3PHPower',
+
+sockets1: 'adminSockets1P', sockets3: 'adminSockets3P',
+
+warning: 'adminLoadWarning', warningText: 'adminLoadWarningText',
+
+startMethod: 'adminStartMethod'
+
+},
+
+public: {
+
+motor1Qty: 'publicMotor1PQty', motor1Power: 'publicMotor1PHPower',
+
+motor3Qty: 'publicMotor3PQty', motor3Power: 'publicMotor3PHPower',
+
+pump1Qty: 'publicPump1PQty', pump1Power: 'publicPump1PHPower',
+
+pump3Qty: 'publicPump3PQty', pump3Power: 'publicPump3PHPower',
+
+sockets1: 'publicSockets1P', sockets3: 'publicSockets3P',
+
+warning: 'publicLoadWarning', warningText: 'publicLoadWarningText',
+
+startMethod: 'publicStartMethod'
+
+}
+
+};
+
+
+function el(id){ return document.getElementById(id); }
+
+function toggleOpacity(elm, cond){ if(!elm) return; elm.classList.toggle('opacity-50', cond); }
+
+
+function enforcePowerEnable(group){
+
+const q1 = parseInt(el(group.motor1Qty).value)||0;
+
+const q3 = parseInt(el(group.motor3Qty).value)||0;
+
+const p1 = parseInt(el(group.pump1Qty).value)||0;
+
+const p3 = parseInt(el(group.pump3Qty).value)||0;
+
+
+Plain text
+
+
+
+
+```
+const powerEls = [
+  {qty:q1, power: el(group.motor1Power)},
+  {qty:q3, power: el(group.motor3Power)},
+  {qty:p1, power: el(group.pump1Power)},
+  {qty:p3, power: el(group.pump3Power)}
+];
+powerEls.forEach(o => {
+  if(!o.power) return;
+  o.power.disabled = (o.qty === 0);
+  toggleOpacity(o.power, o.qty === 0);
+});
+
+```
+
+
+
+
+
+}
+
+
+function applyRIC_socketLimits(group){
+
+const q1 = parseInt(el(group.motor1Qty).value)||0;
+
+const q3 = parseInt(el(group.motor3Qty).value)||0;
+
+const p1 = parseInt(el(group.pump1Qty).value)||0;
+
+const p3 = parseInt(el(group.pump3Qty).value)||0;
+
+const totalLoads = q1+q3+p1+p3;
+
+const sockets1El = el(group.sockets1);
+
+const sockets3El = el(group.sockets3);
+
+
+Plain text
+
+
+
+
+```
+if(totalLoads>0){
+  if(sockets1El){
+    if(parseInt(sockets1El.value)>2) sockets1El.value='2';
+    for(let i=0;i<sockets1El.options.length;i++) sockets1El.options[i].disabled = parseInt(sockets1El.options[i].value) > 2;
+  }
+  if(sockets3El){
+    if(parseInt(sockets3El.value)>1) sockets3El.value='1';
+    for(let i=0;i<sockets3El.options.length;i++) sockets3El.options[i].disabled = parseInt(sockets3El.options[i].value) > 1;
+  }
+} else {
+  if(sockets1El) for(let i=0;i<sockets1El.options.length;i++) sockets1El.options[i].disabled = false;
+  if(sockets3El) for(let i=0;i<sockets3El.options.length;i++) sockets3El.options[i].disabled = false;
+}
+
+```
+
+
+
+
+
+}
+
+
+function validateRIC_blockIfExceeded(group){
+
+const q1 = parseInt(el(group.motor1Qty).value)||0;
+
+const q3 = parseInt(el(group.motor3Qty).value)||0;
+
+const p1 = parseInt(el(group.pump1Qty).value)||0;
+
+const p3 = parseInt(el(group.pump3Qty).value)||0;
+
+const sockets1 = parseInt(el(group.sockets1).value)||0;
+
+const sockets3 = parseInt(el(group.sockets3).value)||0;
+
+
+Plain text
+
+
+
+
+```
+const total1 = q1 + p1;
+const total3 = q3 + p3;
+const warnEl = el(group.warning);
+const warnTextEl = el(group.warningText);
+
+if(warnEl && warnTextEl){ warnEl.classList.add('hidden'); warnTextEl.innerText = ''; }
+
+if(total1 > sockets1){
+  if(warnEl && warnTextEl){
+    warnEl.classList.remove('hidden');
+    warnTextEl.innerText = 'Error RIC: hay más cargas 1P que enchufes. Corrige antes de continuar.';
+  }
+  return false;
+}
+if(total3 > sockets3){
+  if(warnEl && warnTextEl){
+    warnEl.classList.remove('hidden');
+    warnTextEl.innerText = 'Error RIC: hay más cargas 3P que enchufes. Corrige antes de continuar.';
+  }
+  return false;
+}
+return true;
+
+```
+
+
+
+
+
+}
+
+
+function wrap(name, group){
+
+const orig = window[name];
+
+if(typeof orig !== 'function') return;
+
+window[name] = function(){
+
+try{
+
+applyRIC_socketLimits(group);
+
+enforcePowerEnable(group);
+
+const startMethodEl = el(group.startMethod);
+
+if(startMethodEl && startMethodEl.value === 'VFD'){
+
+['motor3Qty','pump3Qty'].forEach(k => {
+
+const id = group[k];
+
+const e = el(id);
+
+if(e){ e.disabled = true; e.classList.add('opacity-50'); e.value='0'; }
+
+});
+
+const p3 = el(group.motor3Power); if(p3){ p3.disabled=true; p3.classList.add('opacity-50'); }
+
+const pp3 = el(group.pump3Power); if(pp3){ pp3.disabled=true; pp3.classList.add('opacity-50'); }
+
+} else {
+
+const e1 = el(group.motor3Qty), e2 = el(group.pump3Qty);
+
+if(e1) { e1.disabled = false; e1.classList.remove('opacity-50'); }
+
+if(e2) { e2.disabled = false; e2.classList.remove('opacity-50'); }
+
+const p3 = el(group.motor3Power); if(p3){ p3.disabled = (parseInt(el(group.motor3Qty).value)||0)===0; p3.classList.toggle('opacity-50', p3.disabled); }
+
+const pp3 = el(group.pump3Power); if(pp3){ pp3.disabled = (parseInt(el(group.pump3Qty).value)||0)===0; pp3.classList.toggle('opacity-50', pp3.disabled); }
+
+}
+
+
+Plain text
+
+
+
+
+```
+    if(!validateRIC_blockIfExceeded(group)){
+      return;
+    }
+  }catch(e){
+    console.error('Validación RIC/error de inicialización', e);
+  }
+  return orig.apply(this, arguments);
+};
+
+```
+
+
+
+
+
+}
+
+
+function addQtyListeners(group){
+
+['motor1Qty','motor3Qty','pump1Qty','pump3Qty'].forEach(k => {
+
+const id = group[k];
+
+const elQty = el(id);
+
+if(!elQty) return;
+
+elQty.addEventListener('change', function(){
+
+try{ enforcePowerEnable(group); applyRIC_socketLimits(group); }catch(e){console.error(e);}
+
+});
+
+});
+
+[group.sockets1, group.sockets3].forEach(id=>{
+
+const s = el(id); if(!s) return;
+
+s.addEventListener('change', function(){ try{ enforcePowerEnable(group); applyRIC_socketLimits(group); }catch(e){console.error(e);} });
+
+});
+
+const startEl = el(group.startMethod);
+
+if(startEl) startEl.addEventListener('change', function(){ try{ enforcePowerEnable(group); applyRIC_socketLimits(group); }catch(e){console.error(e);} });
+
+}
+
+
+window.addEventListener('load', function(){
+
+try{
+
+addQtyListeners(groups.admin);
+
+addQtyListeners(groups.public);
+
+wrap('updateCalculations', groups.admin);
+
+wrap('updateQuote', groups.public);
+
+if(typeof window.updateCalculations === 'function') window.updateCalculations();
+
+if(typeof window.updateQuote === 'function') window.updateQuote();
+
+}catch(e){ console.error('Inicialización script RIC', e); }
+
+});
+
+})();
