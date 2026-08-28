@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- three.js (r152) for simple 3D preview -->
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
     <style>
         html, body {
             overflow-x: hidden;
@@ -354,6 +356,15 @@
                         <i class="fa-solid fa-list-check text-amber-400"></i> Resumen técnico preliminar
                     </div>
                     <div id="publicTechnicalSummaryText">Configuración inicial.</div>
+                </div>
+
+                <!-- 3D Viewer -->
+                <div class="mt-4">
+                    <label class="block text-[10px] text-slate-400 mb-1">Visualizador 3D del tablero</label>
+                    <div id="panel3DWrapper" class="w-full h-72 bg-black rounded-xl border border-slate-800 overflow-hidden">
+                        <!-- canvas inyectado por three.js -->
+                    </div>
+                    <p class="text-[10px] text-slate-500 italic mt-2">Interactúa: rotar (arrastrar), zoom (scroll), desplazar (shift + arrastrar).</p>
                 </div>
 
                 <a id="waOrderBtn" href="#" target="_blank" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-3 sm:py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-xs shadow-xl shadow-amber-500/20 active:scale-[0.98]">
@@ -1274,11 +1285,137 @@
 
             document.getElementById('navWaBtn').href =
                 `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent("Hola ELECTROFAENA, requiero asistencia técnica para un tablero de faena.")}`;
+
+            // Actualizar vista 3D si existe
+            try { if (typeof update3D === 'function') update3D({ systemType, count1P, count3P, loads, totalHP }); } catch(e) { console.warn('3D update failed', e); }
         }
 
         // ==========================================
         // 3. MODALES & AUTENTICACIÓN
         // ==========================================
+        // === 3D VIEWER INITIALIZATION & UPDATE ===
+        let _3dState = { scene:null, camera:null, renderer:null, controls:null, objects:[] };
+        function init3D() {
+            const container = document.getElementById('panel3DWrapper');
+            if (!container || typeof THREE === 'undefined') return;
+
+            // Clear previous renderer if any
+            if (_3dState.renderer) {
+                try { _3dState.renderer.dispose(); } catch(e) {}
+                container.innerHTML = '';
+            }
+
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x020617);
+
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            const camera = new THREE.PerspectiveCamera(40, width/height, 0.1, 1000);
+            camera.position.set(0, 6, 10);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            const light = new THREE.DirectionalLight(0xffffff, 0.8);
+            light.position.set(5,10,7);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+
+            // Ground / base plate
+            const baseGeom = new THREE.BoxGeometry(8, 0.2, 4);
+            const baseMat = new THREE.MeshStandardMaterial({ color:0x0f1724, metalness:0.3, roughness:0.6 });
+            const base = new THREE.Mesh(baseGeom, baseMat);
+            base.position.y = -0.9;
+            scene.add(base);
+
+            // Panel cabinet
+            const cabGeom = new THREE.BoxGeometry(4, 5, 1.2);
+            const cabMat = new THREE.MeshStandardMaterial({ color:0x1f2937, metalness:0.2, roughness:0.5 });
+            const cab = new THREE.Mesh(cabGeom, cabMat);
+            cab.position.set(0,1.2,0);
+            scene.add(cab);
+            _3dState.objects = [cab];
+
+            // Placeholder groups for sockets and loads
+            const socketsGroup = new THREE.Group(); socketsGroup.name = 'sockets'; scene.add(socketsGroup);
+            const loadsGroup = new THREE.Group(); loadsGroup.name = 'loads'; scene.add(loadsGroup);
+
+            // Orbit controls (minimal implementation)
+            function makeControls(dom, cam, rend) {
+                let isDown=false, startX=0, startY=0, rotX=0, rotY=0;
+                dom.addEventListener('pointerdown', e=>{ isDown=true; startX=e.clientX; startY=e.clientY; dom.setPointerCapture(e.pointerId); });
+                dom.addEventListener('pointerup', e=>{ isDown=false; dom.releasePointerCapture && dom.releasePointerCapture(e.pointerId); });
+                dom.addEventListener('pointermove', e=>{ if(!isDown) return; const dx=(e.clientX-startX)/200; const dy=(e.clientY-startY)/200; rotY+=dx; rotX+=dy; scene.rotation.x = rotX; scene.rotation.y = rotY; startX=e.clientX; startY=e.clientY; });
+                dom.addEventListener('wheel', e=>{ e.preventDefault(); cam.position.z += e.deltaY * 0.01; cam.position.z = Math.max(3, Math.min(30, cam.position.z)); }, { passive:false });
+                return { dispose:()=>{} };
+            }
+
+            const controls = makeControls(renderer.domElement, camera, renderer);
+
+            _3dState = { scene, camera, renderer, controls, objects: _3dState.objects };
+
+            function onResize(){
+                const w = container.clientWidth; const h = container.clientHeight;
+                camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h);
+            }
+            window.addEventListener('resize', onResize);
+
+            function animate(){ requestAnimationFrame(animate); renderer.render(scene, camera); }
+            animate();
+
+            // store groups for later updates
+            _3dState.groups = { socketsGroup, loadsGroup };
+        }
+
+        function update3D(state) {
+            if (!(_3dState && _3dState.scene)) init3D();
+            if (!(_3dState && _3dState.scene)) return;
+            const { scene } = _3dState;
+            const socketsGroup = _3dState.groups.socketsGroup;
+            const loadsGroup = _3dState.groups.loadsGroup;
+            // Clear children
+            while(socketsGroup.children.length) socketsGroup.remove(socketsGroup.children[0]);
+            while(loadsGroup.children.length) loadsGroup.remove(loadsGroup.children[0]);
+
+            const { systemType, count1P, count3P, loads: loadsObj } = state;
+
+            // Draw 1P sockets along left side front panel
+            const socketMat1 = new THREE.MeshStandardMaterial({ color:0xffcc66 });
+            for (let i=0;i<count1P;i++){
+                const s = new THREE.Mesh(new THREE.BoxGeometry(0.35,0.18,0.08), socketMat1);
+                s.position.set(-1.4, 0.8 - i*0.35, 0.66);
+                socketsGroup.add(s);
+            }
+            // Draw 3P sockets along right side if present
+            const socketMat3 = new THREE.MeshStandardMaterial({ color:0x66ccff });
+            for (let i=0;i<count3P;i++){
+                const s = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.25,0.12), socketMat3);
+                s.position.set(1.4, 0.8 - i*0.4, 0.66);
+                socketsGroup.add(s);
+            }
+
+            // Represent motors/pumps as small cylinders mounted on base
+            const motorMat = new THREE.MeshStandardMaterial({ color:0xdd6b20 });
+            let offset = -1.5;
+            for (let i=0;i<loadsObj.motor1PQty;i++){
+                const m = new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.18,0.4,12), motorMat);
+                m.rotation.x = Math.PI/2; m.position.set(offset, -0.6, -0.4); offset += 0.9; loadsGroup.add(m);
+            }
+            for (let i=0;i<loadsObj.motor3PQty;i++){
+                const m = new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.22,0.5,12), motorMat);
+                m.rotation.x = Math.PI/2; m.position.set(offset, -0.6, -0.4); offset += 0.9; loadsGroup.add(m);
+            }
+
+            // simple label overlay (canvas text) — keep it minimal: update title above canvas
+            const title = document.getElementById('resTitle');
+            if (title) title.innerText = `Tablero ${systemType === '1P' ? 'Monofásico' : 'Trifásico'} · ${count1P}x1P ${count3P}x3P`;
+        }
+
+        // Initialize 3D once DOM ready
+        document.addEventListener('DOMContentLoaded', ()=>{ setTimeout(init3D, 300); });
+
         function toggleGuaranteeModal() {
             document.getElementById('guaranteeModal').classList.toggle('hidden');
         }
