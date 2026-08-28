@@ -918,10 +918,11 @@
             });
 
             // Si hay cargas de motor/bomba, conservamos la restricción de enchufes existente.
-            const motor1PQty = parseInt(document.getElementById('adminMotor1PQty').value) || 0;
-            const motor3PQty = parseInt(document.getElementById('adminMotor3PQty').value) || 0;
-            const pump1PQty = parseInt(document.getElementById('adminPump1PQty').value) || 0;
-            const pump3PQty = parseInt(document.getElementById('adminPump3PQty').value) || 0;
+            // Usar "let" para permitir ajustar (validar) las cantidades más abajo si no existen enchufes.
+            let motor1PQty = parseInt(document.getElementById('adminMotor1PQty').value) || 0;
+            let motor3PQty = parseInt(document.getElementById('adminMotor3PQty').value) || 0;
+            let pump1PQty = parseInt(document.getElementById('adminPump1PQty').value) || 0;
+            let pump3PQty = parseInt(document.getElementById('adminPump3PQty').value) || 0;
 
             const totalLoads = motor1PQty + motor3PQty + pump1PQty + pump3PQty;
 
@@ -948,6 +949,43 @@
             const targetMarginVal = parseFloat(document.getElementById('targetMargin').value) || 35;
             const targetMargin = targetMarginVal / 100;
             document.getElementById('targetMarginLabel').innerText = targetMarginVal + "%";
+
+            // Si no hay enchufes del tipo correspondiente, forzar cantidades de cargas a 0 y deshabilitar selects visualmente.
+            if (count3PSockets === 0) {
+                ['adminMotor3PQty','adminPump3PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (parseInt(el.value) > 0) el.value = '0';
+                        el.disabled = true;
+                        el.classList.add('opacity-50');
+                    }
+                });
+                motor3PQty = 0;
+                pump3PQty = 0;
+            } else {
+                ['adminMotor3PQty','adminPump3PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.disabled = false; el.classList.remove('opacity-50'); }
+                });
+            }
+
+            if (count1PSockets === 0) {
+                ['adminMotor1PQty','adminPump1PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (parseInt(el.value) > 0) el.value = '0';
+                        el.disabled = true;
+                        el.classList.add('opacity-50');
+                    }
+                });
+                motor1PQty = 0;
+                pump1PQty = 0;
+            } else {
+                ['adminMotor1PQty','adminPump1PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.disabled = false; el.classList.remove('opacity-50'); }
+                });
+            }
 
             const loads = {
                 motor1PQty,
@@ -1077,6 +1115,22 @@
                 pump3PHPower: parseInt(document.getElementById('publicPump3PHPower').value) || 1,
                 startMethod: document.getElementById('publicStartMethod').value
             };
+
+            // Validación: si no hay enchufes 3P o 1P, deshabilitar las cargas del tipo correspondiente y notificar.
+            if (count3P === 0 && (loads.motor3PQty > 0 || loads.pump3PQty > 0)) {
+                const mEl = document.getElementById('publicMotor3PQty'); if (mEl) mEl.value = '0';
+                const pEl = document.getElementById('publicPump3PQty'); if (pEl) pEl.value = '0';
+                loads.motor3PQty = 0; loads.pump3PQty = 0;
+                warning.classList.remove('hidden');
+                warningText.innerHTML = 'No hay enchufes trifásicos seleccionados; las cargas trifásicas han sido deshabilitadas.';
+            }
+            if (count1P === 0 && (loads.motor1PQty > 0 || loads.pump1PQty > 0)) {
+                const m1El = document.getElementById('publicMotor1PQty'); if (m1El) m1El.value = '0';
+                const p1El = document.getElementById('publicPump1PQty'); if (p1El) p1El.value = '0';
+                loads.motor1PQty = 0; loads.pump1PQty = 0;
+                warning.classList.remove('hidden');
+                warningText.innerHTML = 'No hay enchufes monofásicos seleccionados; las cargas monofásicas han sido deshabilitadas.';
+            }
 
             const totalLoads = loads.motor1PQty + loads.motor3PQty + loads.pump1PQty + loads.pump3PQty;
             const totalHP =
