@@ -501,6 +501,17 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <!-- Método de arranque (Motores) - Admin -->
+                            <div>
+                                <label class="block text-[10px] text-slate-400 mb-1">Método de arranque / control (Motores)</label>
+                                <select id="adminMotorStartMethod" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
+                                    <option value="DIRECT">Arranque directo</option>
+                                    <option value="CONTACTOR">Contactor + relé térmico</option>
+                                    <option value="VFD">Variador de frecuencia</option>
+                                    <option value="SOFTSTART">Partidor suave</option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Bombas -->
@@ -911,8 +922,8 @@
             }
 
             const amperage = amperageSelect.value;
-            const controlLevel = 'NONE';
-            const motorPower = '1';
+            let controlLevel = 'NONE';
+            let motorPower = '1';
 
             const adminSockets1PElem = document.getElementById('adminSockets1P');
             const adminSockets3PElem = document.getElementById('adminSockets3P');
@@ -1007,6 +1018,7 @@
                 pump1PHPower: parseInt(document.getElementById('adminPump1PHPower').value) || 1,
                 pump3PQty,
                 pump3PHPower: parseInt(document.getElementById('adminPump3PHPower').value) || 1,
+                motorStartMethod: (document.getElementById('adminMotorStartMethod') ? document.getElementById('adminMotorStartMethod').value : null),
                 startMethod: document.getElementById('adminStartMethod').value
             };
 
@@ -1015,6 +1027,12 @@
                 loads.motor3PQty * loads.motor3PHPower +
                 loads.pump1PQty * loads.pump1PHPower +
                 loads.pump3PQty * loads.pump3PHPower;
+
+            // Determinar nivel de control considerando método específico de motores o método global.
+            if (totalLoads > 0) {
+                controlLevel = ((loads.motorStartMethod === 'CONTACTOR') || (loads.startMethod === 'CONTACTOR')) ? 'GM_CONTROL' : 'GM_SIMPLE';
+                motorPower = '3';
+            }
 
             const bom = getBOMList(systemType, amperage, controlLevel, motorPower, count1PSockets, count3PSockets, loads);
 
@@ -1039,7 +1057,8 @@
                 `${count1PSockets} Enchufes 220V` +
                 `${systemType === '3P' ? ' + ' + count3PSockets + ' Trifásicos' : ''}` +
                 `${loadSummary.length ? ' | ' + loadSummary.join(' | ') : ' | Sin cargas especiales'}` +
-                ` | ${document.getElementById('adminStartMethod').selectedOptions[0].text}`;
+                ` | ${document.getElementById('adminStartMethod').selectedOptions[0].text}` +
+                `${document.getElementById('adminMotorStartMethod') ? ' · Motor: ' + document.getElementById('adminMotorStartMethod').selectedOptions[0].text : ''}`;
 
             document.getElementById('totalCostNeto').innerText = formatCLP(totalCostNeto);
             document.getElementById('salePriceWithTax').innerText = formatCLP(saleWithTax);
