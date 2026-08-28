@@ -237,6 +237,17 @@
                     </div>
                 </div>
 
+                <!-- Método de arranque (Motores) -->
+                <div>
+                    <label class="block text-[10px] text-slate-400 mb-1">Método de arranque / control (Motores)</label>
+                    <select id="publicMotorStartMethod" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                        <option value="DIRECT">Arranque directo</option>
+                        <option value="CONTACTOR">Contactor + relé térmico</option>
+                        <option value="VFD">Variador de frecuencia</option>
+                        <option value="SOFTSTART">Partidor suave</option>
+                    </select>
+                </div>
+
                 <!-- Bombas -->
                 <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3 space-y-2.5">
                     <div class="flex items-center justify-between">
@@ -1113,6 +1124,8 @@
                 pump1PHPower: parseInt(document.getElementById('publicPump1PHPower').value) || 1,
                 pump3PQty: parseInt(document.getElementById('publicPump3PQty').value) || 0,
                 pump3PHPower: parseInt(document.getElementById('publicPump3PHPower').value) || 1,
+                // Método de arranque específico para motores (nuevo recuadro). Fallback al global si no existe.
+                motorStartMethod: (document.getElementById('publicMotorStartMethod') ? document.getElementById('publicMotorStartMethod').value : null),
                 startMethod: document.getElementById('publicStartMethod').value
             };
 
@@ -1130,6 +1143,33 @@
                 loads.motor1PQty = 0; loads.pump1PQty = 0;
                 warning.classList.remove('hidden');
                 warningText.innerHTML = 'No hay enchufes monofásicos seleccionados; las cargas monofásicas han sido deshabilitadas.';
+            }
+
+            // Comprobación preliminar de cargas para aplicar restricciones en cantidad de enchufes.
+            const prelimLoads = loads.motor1PQty + loads.motor3PQty + loads.pump1PQty + loads.pump3PQty;
+            const publicSockets1PElem = document.getElementById('publicSockets1P');
+            const publicSockets3PElem = document.getElementById('publicSockets3P');
+
+            if (prelimLoads > 0) {
+                // Limitar enchufes monofásicos a máximo 2 cuando existen cargas especiales (motores/bombas).
+                if (publicSockets1PElem) {
+                    for (let i = 0; i < publicSockets1PElem.options.length; i++) {
+                        publicSockets1PElem.options[i].disabled = parseInt(publicSockets1PElem.options[i].value) > 2;
+                    }
+                    if (parseInt(publicSockets1PElem.value) > 2) publicSockets1PElem.value = '2';
+                }
+
+                // Si es tablero 3P, limitar enchufes 3P a máximo 1 cuando hay cargas especiales.
+                if (systemType === '3P' && publicSockets3PElem) {
+                    for (let i = 0; i < publicSockets3PElem.options.length; i++) {
+                        publicSockets3PElem.options[i].disabled = parseInt(publicSockets3PElem.options[i].value) > 1;
+                    }
+                    if (parseInt(publicSockets3PElem.value) > 1) publicSockets3PElem.value = '1';
+                }
+            } else {
+                // Restaurar opciones si no hay cargas especiales.
+                if (publicSockets1PElem) for (let i = 0; i < publicSockets1PElem.options.length; i++) publicSockets1PElem.options[i].disabled = false;
+                if (publicSockets3PElem) for (let i = 0; i < publicSockets3PElem.options.length; i++) publicSockets3PElem.options[i].disabled = false;
             }
 
             const totalLoads = loads.motor1PQty + loads.motor3PQty + loads.pump1PQty + loads.pump3PQty;
@@ -1157,7 +1197,7 @@
             let controlLevel = 'NONE';
             let motorPower = '1';
             if (totalLoads > 0) {
-                controlLevel = loads.startMethod === 'CONTACTOR' ? 'GM_CONTROL' : 'GM_SIMPLE';
+                controlLevel = ((loads.motorStartMethod === 'CONTACTOR') || (loads.startMethod === 'CONTACTOR')) ? 'GM_CONTROL' : 'GM_SIMPLE';
                 motorPower = '3';
             }
 
@@ -1191,6 +1231,8 @@
             if (count1P) productDetail += ` + ${count1P} enchufes 220V`;
             if (systemType === '3P' && count3P) productDetail += ` + ${count3P} enchufes 380V`;
             if (loadSummary.length) productDetail += ` + ${loadSummary.join(', ')}`;
+            const motorMethodText = (document.getElementById('publicMotorStartMethod') ? document.getElementById('publicMotorStartMethod').selectedOptions[0].text : '');
+            if (motorMethodText) productDetail += ` + Motor: ${motorMethodText}`;
             productDetail += ` + ${document.getElementById('publicStartMethod').selectedOptions[0].text}`;
 
             const modeStr = mode === 'BUY' ? 'Compra' : 'Arriendo';
@@ -1202,10 +1244,11 @@
                 `💰 Valor Estimado: ${formatCLP(finalPrice)} (+IVA)\n\n` +
                 `¿Me pueden enviar la cotización formal y validar la configuración técnica?`;
 
+            const globalMethodText = document.getElementById('publicStartMethod').selectedOptions[0].text;
             document.getElementById('publicTechnicalSummaryText').innerText =
                 `${systemType === '1P' ? '220 V monofásico' : '380 V trifásico'} · ${amperage} A · ` +
                 `${count1P + count3P} salida(s) de enchufe · ${totalLoads} carga(s) especial(es) · ` +
-                `${totalHP} HP seleccionados · ${document.getElementById('publicStartMethod').selectedOptions[0].text}.`;
+                `${totalHP} HP seleccionados · ${motorMethodText ? motorMethodText + ' / ' : ''}${globalMethodText}.`;
 
             document.getElementById('waOrderBtn').href =
                 `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(waMsg)}`;
