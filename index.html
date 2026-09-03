@@ -10,9 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Three.js (r152) para renderizado 3D -->
+    <!-- three.js (r152) for simple 3D preview -->
     <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <!-- OrbitControls and GLTFLoader (examples) -->
     <script src="https://unpkg.com/three@0.152.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://unpkg.com/three@0.152.0/examples/js/loaders/GLTFLoader.js"></script>
     <style>
         html, body {
             overflow-x: hidden;
@@ -20,6 +22,7 @@
             position: relative;
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
@@ -38,6 +41,7 @@
     <!-- Navbar Global -->
     <nav class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 no-print w-full">
         <div class="max-w-6xl w-full mx-auto px-3 py-2.5 sm:py-3 flex justify-between items-center gap-2">
+            <!-- Logo con trigger secreto (3 clics) -->
             <div class="flex items-center gap-2 cursor-pointer select-none shrink-0" onclick="checkAdminKey(event)" title="Haz 3 clics para acceso de Administrador">
                 <div class="bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-slate-950 font-extrabold text-sm sm:text-base shadow-lg shadow-amber-500/20">
                     <i class="fa-solid fa-bolt-lightning"></i>
@@ -51,6 +55,7 @@
                 </div>
             </div>
             
+            <!-- Botones a la derecha -->
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <button onclick="toggleGuaranteeModal()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[11px] sm:text-xs font-bold px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl transition flex items-center gap-1 shadow-sm">
                     <i class="fa-solid fa-shield-halved text-xs sm:text-sm"></i>
@@ -78,7 +83,7 @@
                 Cotiza tu Tablero de Faena o Control
             </h1>
             <p class="text-xs text-slate-400 leading-relaxed px-2">
-                Todos nuestros equipos cumplen estrictamente con <strong class="text-amber-400">Norma RIC N°02/10 SEC</strong> con protecciones independientes por circuito.
+                Todos nuestros equipos cumplen strictly con <strong class="text-amber-400">Norma RIC N°02/10 SEC</strong> con protecciones independientes por circuito.
             </p>
         </div>
     </header>
@@ -86,6 +91,7 @@
     <!-- VISTA PÚBLICA (COTIZADOR) -->
     <main id="publicView" class="flex-1 max-w-3xl w-full mx-auto p-3 sm:p-4 space-y-4 sm:space-y-6 no-print">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-7 shadow-2xl space-y-5 sm:space-y-6 relative overflow-hidden w-full">
+            <!-- Linea de Acento Amarillo Superior -->
             <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600"></div>
 
             <!-- 1. Red -->
@@ -156,10 +162,10 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Enchufes 220V Monofásicos -->
                     <div>
                         <label class="block text-[11px] text-slate-400 font-medium mb-1">Enchufes Monofásicos (220V - 16A)</label>
                         <select id="publicSockets1P" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 truncate">
-                            <option value="0">0 Enchufes 220V</option>
                             <option value="2">2 Enchufes 220V (1 Dif. 30mA)</option>
                             <option value="4" selected>4 Enchufes 220V (2 Dif. 30mA indep.)</option>
                             <option value="6">6 Enchufes 220V (3 Dif. 30mA indep.)</option>
@@ -167,10 +173,10 @@
                         </select>
                     </div>
 
+                    <!-- Enchufes 380V Trifásicos -->
                     <div id="publicSockets3PWrapper">
                         <label class="block text-[11px] text-slate-400 font-medium mb-1">Enchufes Trifásicos (380V IP67)</label>
                         <select id="publicSockets3P" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 truncate">
-                            <option value="0">0 Enchufes 380V</option>
                             <option value="1" selected>1 Enchufe 380V (1 Dif. Tetrapolar)</option>
                             <option value="2">2 Enchufes 380V (2 Dif. Tetrapolares)</option>
                             <option value="3">3 Enchufes 380V (3 Dif. Tetrapolares XL)</option>
@@ -182,7 +188,7 @@
                 </p>
             </div>
 
-            <!-- 4. Cargas especiales -->
+            <!-- 4. Cargas especiales: motores y bombas -->
             <div class="space-y-3 bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-amber-500/20 shadow-inner">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
                     <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -220,7 +226,7 @@
                         </div>
                         <div>
                             <label class="block text-[10px] text-slate-400 mb-1">Trifásicos</label>
-                            <select id="publicMotor3PQty" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                            <select id="publicMotor3PQty" title="Solo disponible con alimentación trifásica" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
                                 <option value="0" selected>0 motores</option>
                                 <option value="1">1 motor</option><option value="2">2 motores</option>
                                 <option value="3">3 motores</option><option value="4">4 motores</option>
@@ -236,6 +242,7 @@
                     </div>
                 </div>
 
+                <!-- Método de arranque (Motores) -->
                 <div>
                     <label class="block text-[10px] text-slate-400 mb-1">Método de arranque / control (Motores)</label>
                     <select id="publicMotorStartMethod" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
@@ -273,7 +280,7 @@
                         </div>
                         <div>
                             <label class="block text-[10px] text-slate-400 mb-1">Trifásicas</label>
-                            <select id="publicPump3PQty" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                            <select id="publicPump3PQty" title="Solo disponible con alimentación trifásica" onchange="updateQuote()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
                                 <option value="0" selected>0 bombas</option>
                                 <option value="1">1 bomba</option><option value="2">2 bombas</option>
                                 <option value="3">3 bombas</option><option value="4">4 bombas</option>
@@ -289,6 +296,7 @@
                     </div>
                 </div>
 
+                <!-- Método de arranque -->
                 <div>
                     <label class="block text-[10px] text-slate-400 mb-1">Método de arranque / control</label>
                     <select id="publicStartMethod" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
@@ -305,7 +313,7 @@
                 </div>
 
                 <p class="text-[10px] text-slate-500 italic">
-                    * La selección de HP es una estimación preliminar. La protección definitiva debe verificarse con datos de placa del equipo.
+                    * La selección de HP es una estimación preliminar. La protección definitiva debe verificarse con los datos de placa, corriente nominal, tensión y método de arranque del equipo.
                 </p>
             </div>
 
@@ -330,7 +338,7 @@
                 </div>
             </div>
 
-            <!-- Card Resultante -->
+            <!-- Card de Cotización Resultante -->
             <div class="bg-slate-950 rounded-xl p-4 sm:p-5 border border-amber-500/30 space-y-3.5 shadow-lg shadow-amber-500/5 relative overflow-hidden">
                 <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none"></div>
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
@@ -356,8 +364,8 @@
                 <!-- 3D Viewer -->
                 <div class="mt-4">
                     <label class="block text-[10px] text-slate-400 mb-1">Visualizador 3D del tablero</label>
-                    <div id="panel3DWrapper" class="w-full h-72 bg-black rounded-xl border border-slate-800 overflow-hidden relative">
-                        <div id="panel3DStatus" class="text-[10px] text-slate-400 p-2 absolute z-10 pointer-events-none">Cargando modelo 3D...</div>
+                    <div id="panel3DWrapper" class="w-full h-72 bg-black rounded-xl border border-slate-800 overflow-hidden">
+                        <div id="panel3DStatus" class="text-[10px] text-slate-400 p-2">Cargando modelo 3D...</div>
                     </div>
                     <p class="text-[10px] text-slate-500 italic mt-2">Interactúa: rotar (arrastrar), zoom (scroll), desplazar (shift + arrastrar).</p>
                 </div>
@@ -370,8 +378,10 @@
         </div>
     </main>
 
-    <!-- VISTA PRIVADA (ADMIN) -->
+    <!-- VISTA PRIVADA (PANEL DE COSTOS EMPRESARIAL FULL CON PROVEEDORES Y MATERIALES) -->
     <main id="adminView" class="hidden flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+        
+        <!-- Header del Panel de Control -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-2xl relative overflow-hidden">
             <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600"></div>
             <div class="flex items-center gap-3">
@@ -399,7 +409,10 @@
             </div>
         </div>
 
+        <!-- Grid de Configuración & Resultados -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+            
+            <!-- Panel de Configuración Interna -->
             <section class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4 no-print">
                 <div class="border-b border-slate-800 pb-3">
                     <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
@@ -409,6 +422,7 @@
                 </div>
 
                 <form class="space-y-3.5" onsubmit="event.preventDefault();">
+                    <!-- Tipo de Alimentación -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Alimentación Eléctrica</label>
                         <div class="grid grid-cols-2 gap-2">
@@ -427,6 +441,7 @@
                         </div>
                     </div>
 
+                    <!-- Amperaje -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Amperaje Principal</label>
                         <select id="amperage" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500 truncate">
@@ -436,11 +451,11 @@
                         </select>
                     </div>
 
+                    <!-- Enchufes Monofásicos y Trifásicos -->
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-[11px] font-semibold text-slate-300 mb-1">Cant. Enchufes 220V</label>
                             <select id="adminSockets1P" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
-                                <option value="0">0 Enchufes</option>
                                 <option value="2">2 Enchufes</option>
                                 <option value="4" selected>4 Enchufes</option>
                                 <option value="6">6 Enchufes</option>
@@ -450,7 +465,6 @@
                         <div id="adminSockets3PBox">
                             <label class="block text-[11px] font-semibold text-slate-300 mb-1">Cant. Enchufes 380V</label>
                             <select id="adminSockets3P" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
-                                <option value="0">0 Enchufes</option>
                                 <option value="1" selected>1 Enchufe</option>
                                 <option value="2">2 Enchufes</option>
                                 <option value="3">3 Enchufes</option>
@@ -458,6 +472,7 @@
                         </div>
                     </div>
 
+                    <!-- Cargas especiales: Motores y Bombas -->
                     <div class="space-y-3 border-t border-slate-800 pt-3">
                         <div>
                             <label class="block text-xs font-semibold text-amber-400 mb-1">
@@ -501,6 +516,7 @@
                                 </div>
                             </div>
 
+                            <!-- Método de arranque (Motores) - Admin -->
                             <div>
                                 <label class="block text-[10px] text-slate-400 mb-1">Método de arranque / control (Motores)</label>
                                 <select id="adminMotorStartMethod" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
@@ -548,6 +564,7 @@
                             </div>
                         </div>
 
+                        <!-- Método de arranque -->
                         <div>
                             <label class="block text-[10px] text-slate-400 mb-1">Método de arranque / control</label>
                             <select id="adminStartMethod" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
@@ -564,6 +581,7 @@
                         </div>
                     </div>
 
+                    <!-- Margen Deseado -->
                     <div class="border-t border-slate-800 pt-3">
                         <div class="flex justify-between items-center mb-1">
                             <label class="block text-xs font-semibold text-slate-300">Margen Venta (%)</label>
@@ -574,6 +592,7 @@
                 </form>
             </section>
 
+            <!-- Resultados e Ingeniería de Costos -->
             <section class="lg:col-span-7 space-y-4 sm:space-y-5">
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl print-card space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
@@ -588,6 +607,7 @@
                         </div>
                     </div>
 
+                    <!-- Métricas Financieras -->
                     <div class="grid grid-cols-3 gap-2 sm:gap-3 text-center">
                         <div class="bg-slate-950 p-2 sm:p-3 rounded-xl border border-slate-800">
                             <span class="text-[9px] sm:text-[10px] text-slate-400 block uppercase font-bold">Venta (+IVA)</span>
@@ -603,6 +623,7 @@
                         </div>
                     </div>
 
+                    <!-- Lista de Materiales en Precios Mercado con Links Validados -->
                     <div class="space-y-2 pt-2">
                         <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Desglose de Materiales:</h3>
                         <div class="overflow-x-auto w-full block">
@@ -617,6 +638,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="bomTable" class="divide-y divide-slate-800/50 font-mono text-slate-300">
+                                    <!-- Inyectado por JS -->
                                 </tbody>
                             </table>
                         </div>
@@ -626,12 +648,13 @@
         </div>
     </main>
 
-    <!-- Modales -->
+    <!-- Modal de Garantía Técnica y Normativa -->
     <div id="guaranteeModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 sm:p-6 space-y-4 sm:space-y-5 shadow-2xl relative">
             <button onclick="toggleGuaranteeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
+
             <div class="text-center space-y-2">
                 <div class="bg-amber-500/20 text-amber-400 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mx-auto border border-amber-500/30">
                     <i class="fa-solid fa-shield-halved text-xl sm:text-2xl"></i>
@@ -639,6 +662,7 @@
                 <h3 class="font-black text-lg sm:text-xl text-white">Garantía Técnica SEC ElectroFaena</h3>
                 <p class="text-xs text-slate-400">12 Meses de Cobertura Total en Obra</p>
             </div>
+
             <div class="space-y-2 text-xs text-slate-300">
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
                     <span class="font-bold text-amber-400 block flex items-center gap-1.5">
@@ -646,12 +670,14 @@
                     </span>
                     <p class="text-slate-400 text-[11px]">Reemplazo inmediato por falla de fábrica en protecciones.</p>
                 </div>
+
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
                     <span class="font-bold text-amber-400 block flex items-center gap-1.5">
                         <i class="fa-solid fa-box-archive text-amber-400"></i> 2. Hermeticidad IP65
                     </span>
                     <p class="text-slate-400 text-[11px]">Garantía de estanqueidad en gabinete metálico ante intemperie.</p>
                 </div>
+
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
                     <span class="font-bold text-amber-400 block flex items-center gap-1.5">
                         <i class="fa-solid fa-file-contract text-blue-400"></i> 3. Pliego RIC N°02 SEC
@@ -659,6 +685,7 @@
                     <p class="text-slate-400 text-[11px]">Certificado y pre-configurado para inspección TE1 SEC.</p>
                 </div>
             </div>
+
             <div class="pt-2 flex gap-2">
                 <a href="mailto:electro.faena.sis@gmail.com?subject=Solicitud%20de%20Garantia%20ELECTROFAENA" class="flex-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold py-2.5 rounded-xl transition text-center">
                     <i class="fa-solid fa-envelope mr-1"></i> Reportar
@@ -670,6 +697,7 @@
         </div>
     </div>
 
+    <!-- Modal Login Administrador -->
     <div id="loginModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-sm w-full space-y-4 shadow-2xl">
             <div class="text-center space-y-1">
@@ -679,10 +707,12 @@
                 <h3 class="text-lg font-bold text-white">Acceso Administrador</h3>
                 <p class="text-xs text-slate-400">Ingresa tu clave privada de ELECTROFAENA</p>
             </div>
+
             <div class="space-y-2">
                 <input type="password" id="adminPassInput" placeholder="Contraseña privada" onkeyup="if(event.key==='Enter') submitAdminLogin()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white text-center font-mono focus:outline-none focus:border-blue-500">
                 <p id="loginError" class="hidden text-[11px] text-red-400 text-center font-bold">Contraseña incorrecta</p>
             </div>
+
             <div class="flex gap-2">
                 <button onclick="closeLoginModal()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold py-2.5 rounded-xl transition">Cancelar</button>
                 <button onclick="submitAdminLogin()" class="w-1/2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2.5 rounded-xl transition">Ingresar</button>
@@ -690,6 +720,7 @@
         </div>
     </div>
 
+    <!-- Footer -->
     <footer class="bg-slate-900 border-t border-slate-800 p-4 text-center text-[11px] text-slate-500 no-print flex flex-col sm:flex-row justify-between items-center max-w-6xl mx-auto w-full gap-2">
         <span>ELECTROFAENA SpA &copy; 2026 - Certificación & Ingeniería de Control</span>
         <button onclick="openLoginModal()" class="text-slate-600 hover:text-slate-400 transition flex items-center gap-1 text-[10px]">
@@ -697,7 +728,7 @@
         </button>
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT COMPLETA Y CORREGIDA -->
+    <!-- LÓGICA JAVASCRIPT INTEGRADA -->
     <script>
         const WHATSAPP_NUM = "56932810327";
         const ADMIN_PIN = "@INSIDE12";
@@ -705,6 +736,7 @@
         let adminClicks = 0;
         let adminTimer = null;
 
+        // Catálogo de insumos basado en precios de mercado reales con proveedores
         const CATALOG_FULL = {
             CABINETS: {
                 SMALL: { name: "Gabinete Metálico IP65 300x250x150", price: 25530, link: "https://www.rielec.cl/gabinete-metalico-300x300x200-ip65-1p" },
@@ -771,10 +803,12 @@
 
         function getBOMList(systemType, amperage, controlLevel, motorPower, count1P, count3P, loads = {}) {
             const list = [];
+
             const totalSockets = count1P + (systemType === '3P' ? count3P : 0);
             const totalLoads = (loads.motor1PQty || 0) + (loads.motor3PQty || 0) +
                                (loads.pump1PQty || 0) + (loads.pump3PQty || 0);
 
+            // Gabinete según volumen aproximado de componentes.
             let cabinetKey = 'SMALL';
             const componentCount = totalSockets + totalLoads;
             if (componentCount >= 8 || (systemType === '3P' && amperage === '63')) {
@@ -786,32 +820,38 @@
             }
             list.push({ ...CATALOG_FULL.CABINETS[cabinetKey], qty: 1 });
 
+            // Protección general.
             const autoKey = `${systemType}_${amperage}A`;
             if (CATALOG_FULL.AUTOMATICS[autoKey]) {
                 list.push({ ...CATALOG_FULL.AUTOMATICS[autoKey], qty: 1 });
             }
 
+            // Diferencial general.
             const diffKey = `${systemType}_${amperage}A`;
             if (CATALOG_FULL.DIFFERENTIALS[diffKey]) {
                 list.push({ ...CATALOG_FULL.DIFFERENTIALS[diffKey], qty: 1 });
             }
 
+            // Repartición y alimentación.
             const busKey = systemType === '1P' ? '2P_UP' : '4P_UP';
             list.push({ ...CATALOG_FULL.BUSBARS[busKey], qty: 1 });
             list.push({ ...CATALOG_FULL.MALE_PLUGS[systemType], qty: 1 });
 
+            // Enchufes 1P.
             if (count1P > 0) {
                 list.push({ ...CATALOG_FULL.MISC.PLUG_CEE_1P, qty: count1P });
                 list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: Math.ceil(count1P / 2) });
                 list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: Math.ceil(count1P / 2) });
             }
 
+            // Enchufes 3P.
             if (systemType === '3P' && count3P > 0) {
                 list.push({ ...CATALOG_FULL.MISC.PLUG_CEE_3P, qty: count3P });
                 list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_3P, qty: count3P });
                 list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P, qty: count3P });
             }
 
+            // Cada carga especial se trata como circuito independiente.
             const motor1PQty = loads.motor1PQty || 0;
             const motor3PQty = loads.motor3PQty || 0;
             const pump1PQty = loads.pump1PQty || 0;
@@ -822,26 +862,47 @@
             const special3P = motor3PQty + pump3PQty;
 
             if (special1P > 0) {
-                list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: special1P });
-                list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: special1P });
+                list.push({
+                    ...CATALOG_FULL.AUTOMATICS.PROT_2P,
+                    qty: special1P
+                });
+                list.push({
+                    ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P,
+                    qty: special1P
+                });
             }
 
             if (systemType === '3P' && special3P > 0) {
-                list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_3P, qty: special3P });
-                list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P, qty: special3P });
+                list.push({
+                    ...CATALOG_FULL.AUTOMATICS.PROT_3P,
+                    qty: special3P
+                });
+                list.push({
+                    ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P,
+                    qty: special3P
+                });
             }
 
             if (totalLoads > 0) {
+                // Control común seleccionado para la etapa actual.
                 list.push({ ...CATALOG_FULL.MOTOR_CONTROL[startMethod], qty: totalLoads });
+
+                // Accesorios de control para cada circuito.
                 if (startMethod === 'CONTACTOR') {
                     list.push({ ...CATALOG_FULL.CONTACTORS['3'], qty: totalLoads });
                     list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalLoads });
-                } else {
+                } else if (startMethod === 'DIRECT') {
+                    list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalLoads });
+                } else if (startMethod === 'SOFTSTART') {
+                    list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalLoads });
+                } else if (startMethod === 'VFD') {
                     list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalLoads });
                 }
+
                 list.push({ ...CATALOG_FULL.MISC.MOTOR_TERMINALS, qty: totalLoads });
             }
 
+            // Elementos auxiliares existentes.
             list.push({ ...CATALOG_FULL.MISC.EMERGENCY_BUTTON, qty: 1 });
             list.push({ ...CATALOG_FULL.MISC.PILOT_LIGHT, qty: systemType === '1P' ? 1 : 3 });
 
@@ -873,41 +934,89 @@
             }
 
             const amperage = amperageSelect.value;
+            let controlLevel = 'NONE';
+            let motorPower = '1';
+
             const adminSockets1PElem = document.getElementById('adminSockets1P');
             const adminSockets3PElem = document.getElementById('adminSockets3P');
+
+            // Coherencia: cargas 3P solo existen en tablero 3P.
+            const threePhaseAdminLoads = ['adminMotor3PQty', 'adminPump3PQty'];
+            threePhaseAdminLoads.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.disabled = systemType === '1P';
+                    el.classList.toggle('opacity-50', systemType === '1P');
+                    if (systemType === '1P') el.value = '0';
+                }
+            });
+
+            let motor1PQty = parseInt(document.getElementById('adminMotor1PQty').value) || 0;
+            let motor3PQty = parseInt(document.getElementById('adminMotor3PQty').value) || 0;
+            let pump1PQty = parseInt(document.getElementById('adminPump1PQty').value) || 0;
+            let pump3PQty = parseInt(document.getElementById('adminPump3PQty').value) || 0;
+
+            const totalLoads = motor1PQty + motor3PQty + pump1PQty + pump3PQty;
+
+            if (totalLoads > 0) {
+                if (parseInt(adminSockets1PElem.value) > 2) adminSockets1PElem.value = "2";
+                for (let i = 0; i < adminSockets1PElem.options.length; i++) {
+                    adminSockets1PElem.options[i].disabled = parseInt(adminSockets1PElem.options[i].value) > 2;
+                }
+
+                if (systemType === '3P') {
+                    if (parseInt(adminSockets3PElem.value) > 1) adminSockets3PElem.value = "1";
+                    for (let i = 0; i < adminSockets3PElem.options.length; i++) {
+                        adminSockets3PElem.options[i].disabled = parseInt(adminSockets3PElem.options[i].value) > 1;
+                    }
+                }
+            } else {
+                for (let i = 0; i < adminSockets1PElem.options.length; i++) adminSockets1PElem.options[i].disabled = false;
+                for (let i = 0; i < adminSockets3PElem.options.length; i++) adminSockets3PElem.options[i].disabled = false;
+            }
 
             const count1PSockets = parseInt(adminSockets1PElem.value) || 0;
             const count3PSockets = systemType === '3P' ? (parseInt(adminSockets3PElem.value) || 0) : 0;
 
-            // Deshabilitar dinámicamente cargas cuando la cantidad de enchufes es 0
+            const targetMarginVal = parseFloat(document.getElementById('targetMargin').value) || 35;
+            const targetMargin = targetMarginVal / 100;
+            document.getElementById('targetMarginLabel').innerText = targetMarginVal + "%";
+
             if (count3PSockets === 0) {
                 ['adminMotor3PQty','adminPump3PQty'].forEach(id => {
                     const el = document.getElementById(id);
-                    if (el) { el.value = '0'; el.disabled = true; el.classList.add('opacity-50'); }
+                    if (el) {
+                        if (parseInt(el.value) > 0) el.value = '0';
+                        el.disabled = true;
+                        el.classList.add('opacity-50');
+                    }
                 });
+                motor3PQty = 0;
+                pump3PQty = 0;
             } else {
                 ['adminMotor3PQty','adminPump3PQty'].forEach(id => {
                     const el = document.getElementById(id);
-                    if (el) { el.disabled = systemType === '1P'; el.classList.toggle('opacity-50', systemType === '1P'); }
+                    if (el) { el.disabled = false; el.classList.remove('opacity-50'); }
                 });
             }
 
             if (count1PSockets === 0) {
                 ['adminMotor1PQty','adminPump1PQty'].forEach(id => {
                     const el = document.getElementById(id);
-                    if (el) { el.value = '0'; el.disabled = true; el.classList.add('opacity-50'); }
+                    if (el) {
+                        if (parseInt(el.value) > 0) el.value = '0';
+                        el.disabled = true;
+                        el.classList.add('opacity-50');
+                    }
                 });
+                motor1PQty = 0;
+                pump1PQty = 0;
             } else {
                 ['adminMotor1PQty','adminPump1PQty'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) { el.disabled = false; el.classList.remove('opacity-50'); }
                 });
             }
-
-            const motor1PQty = parseInt(document.getElementById('adminMotor1PQty').value) || 0;
-            const motor3PQty = parseInt(document.getElementById('adminMotor3PQty').value) || 0;
-            const pump1PQty = parseInt(document.getElementById('adminPump1PQty').value) || 0;
-            const pump3PQty = parseInt(document.getElementById('adminPump3PQty').value) || 0;
 
             const loads = {
                 motor1PQty,
@@ -918,15 +1027,22 @@
                 pump1PHPower: parseInt(document.getElementById('adminPump1PHPower').value) || 1,
                 pump3PQty,
                 pump3PHPower: parseInt(document.getElementById('adminPump3PHPower').value) || 1,
-                motorStartMethod: document.getElementById('adminMotorStartMethod') ? document.getElementById('adminMotorStartMethod').value : null,
+                motorStartMethod: (document.getElementById('adminMotorStartMethod') ? document.getElementById('adminMotorStartMethod').value : null),
                 startMethod: document.getElementById('adminStartMethod').value
             };
 
-            const targetMarginVal = parseFloat(document.getElementById('targetMargin').value) || 35;
-            const targetMargin = targetMarginVal / 100;
-            document.getElementById('targetMarginLabel').innerText = targetMarginVal + "%";
+            const totalHP =
+                loads.motor1PQty * loads.motor1PHPower +
+                loads.motor3PQty * loads.motor3PHPower +
+                loads.pump1PQty * loads.pump1PHPower +
+                loads.pump3PQty * loads.pump3PHPower;
 
-            const bom = getBOMList(systemType, amperage, 'NONE', '1', count1PSockets, count3PSockets, loads);
+            if (totalLoads > 0) {
+                controlLevel = ((loads.motorStartMethod === 'CONTACTOR') || (loads.startMethod === 'CONTACTOR')) ? 'GM_CONTROL' : 'GM_SIMPLE';
+                motorPower = '3';
+            }
+
+            const bom = getBOMList(systemType, amperage, controlLevel, motorPower, count1PSockets, count3PSockets, loads);
 
             let totalCostNeto = 0;
             bom.forEach(item => totalCostNeto += (item.price * item.qty));
@@ -936,11 +1052,40 @@
             const profitNeto = saleNeto - totalCostNeto;
             const rentMonthly = saleWithTax * 0.28;
 
-            document.getElementById('panelTitle').innerText = `Tablero ${systemType === '1P' ? 'Monofásico 220V' : 'Trifásico 380V'} - ${amperage}A`;
+            const loadSummary = [];
+            if (motor1PQty) loadSummary.push(`${motor1PQty} motor(es) 1P ${loads.motor1PHPower} HP`);
+            if (motor3PQty) loadSummary.push(`${motor3PQty} motor(es) 3P ${loads.motor3PHPower} HP`);
+            if (pump1PQty) loadSummary.push(`${pump1PQty} bomba(s) 1P ${loads.pump1PHPower} HP`);
+            if (pump3PQty) loadSummary.push(`${pump3PQty} bomba(s) 3P ${loads.pump3PHPower} HP`);
+
+            document.getElementById('panelTitle').innerText =
+                `Tablero ${systemType === '1P' ? 'Monofásico 220V' : 'Trifásico 380V'} - ${amperage}A`;
+
+            document.getElementById('panelSubtitle').innerText =
+                `${count1PSockets} Enchufes 220V` +
+                `${systemType === '3P' ? ' + ' + count3PSockets + ' Trifásicos' : ''}` +
+                `${loadSummary.length ? ' | ' + loadSummary.join(' | ') : ' | Sin cargas especiales'}` +
+                ` | ${document.getElementById('adminStartMethod').selectedOptions[0].text}` +
+                `${document.getElementById('adminMotorStartMethod') ? ' · Motor: ' + document.getElementById('adminMotorStartMethod').selectedOptions[0].text : ''}`;
+
             document.getElementById('totalCostNeto').innerText = formatCLP(totalCostNeto);
             document.getElementById('salePriceWithTax').innerText = formatCLP(saleWithTax);
             document.getElementById('profitNeto').innerText = formatCLP(profitNeto);
             document.getElementById('rentMonthly').innerText = formatCLP(rentMonthly);
+
+            const warning = document.getElementById('adminLoadWarning');
+            const warningText = document.getElementById('adminLoadWarningText');
+
+            if (totalLoads > 0 && totalHP > 6) {
+                warning.classList.remove('hidden');
+                warningText.innerText = `Carga especial acumulada: ${totalHP} HP. Revisar capacidad, simultaneidad, corriente de arranque y protecciones antes de emitir precio definitivo.`;
+            } else if (document.getElementById('adminStartMethod').value === 'VFD' && totalLoads > 1) {
+                warning.classList.remove('hidden');
+                warningText.innerText = 'Hay más de una carga con VFD. Para el cálculo definitivo conviene seleccionar un variador individual por motor/bomba.';
+            } else {
+                warning.classList.add('hidden');
+                warningText.innerText = '';
+            }
 
             const bomTable = document.getElementById('bomTable');
             bomTable.innerHTML = bom.map(item => `
@@ -965,6 +1110,8 @@
             const systemType = document.querySelector('input[name="publicSystemType"]:checked').value;
             const public63aWrapper = document.getElementById('public63aWrapper');
             const publicSockets3PWrapper = document.getElementById('publicSockets3PWrapper');
+            const warning = document.getElementById('publicLoadWarning');
+            const warningText = document.getElementById('publicLoadWarningText');
 
             if (systemType === '1P') {
                 public63aWrapper.classList.add('opacity-40', 'pointer-events-none');
@@ -980,34 +1127,22 @@
             }
 
             const amperage = document.querySelector('input[name="publicAmperage"]:checked').value;
+            const is1P = systemType === '1P';
+
+            // Coherencia eléctrica: un tablero monofásico no puede alimentar cargas trifásicas.
+            const threePhaseLoadIds = ['publicMotor3PQty', 'publicPump3PQty'];
+            threePhaseLoadIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.disabled = is1P;
+                    el.classList.toggle('opacity-50', is1P);
+                    if (is1P) el.value = '0';
+                }
+            });
+
             const count1P = parseInt(document.getElementById('publicSockets1P').value) || 0;
             const count3P = systemType === '3P' ? (parseInt(document.getElementById('publicSockets3P').value) || 0) : 0;
             const mode = document.querySelector('input[name="publicServiceMode"]:checked').value;
-
-            // Bloquear cargas especiales si la cantidad de enchufes respectivos es 0
-            if (count3P === 0) {
-                ['publicMotor3PQty','publicPump3PQty'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) { el.value = '0'; el.disabled = true; el.classList.add('opacity-50'); }
-                });
-            } else {
-                ['publicMotor3PQty','publicPump3PQty'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) { el.disabled = systemType === '1P'; el.classList.toggle('opacity-50', systemType === '1P'); }
-                });
-            }
-
-            if (count1P === 0) {
-                ['publicMotor1PQty','publicPump1PQty'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) { el.value = '0'; el.disabled = true; el.classList.add('opacity-50'); }
-                });
-            } else {
-                ['publicMotor1PQty','publicPump1PQty'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) { el.disabled = false; el.classList.remove('opacity-50'); }
-                });
-            }
 
             const loads = {
                 motor1PQty: parseInt(document.getElementById('publicMotor1PQty').value) || 0,
@@ -1018,113 +1153,103 @@
                 pump1PHPower: parseInt(document.getElementById('publicPump1PHPower').value) || 1,
                 pump3PQty: parseInt(document.getElementById('publicPump3PQty').value) || 0,
                 pump3PHPower: parseInt(document.getElementById('publicPump3PHPower').value) || 1,
+                motorStartMethod: (document.getElementById('publicMotorStartMethod') ? document.getElementById('publicMotorStartMethod').value : null),
                 startMethod: document.getElementById('publicStartMethod').value
             };
 
-            const bom = getBOMList(systemType, amperage, 'NONE', '1', count1P, count3P, loads);
+            // Reset warnings
+            warning.classList.add('hidden');
+            warningText.innerHTML = '';
+
+            // Validación: si no hay enchufes 3P o 1P, deshabilitar las cargas del tipo correspondiente y notificar.
+            if (count3P === 0 && (loads.motor3PQty > 0 || loads.pump3PQty > 0)) {
+                const mEl = document.getElementById('publicMotor3PQty'); if (mEl) mEl.value = '0';
+                const pEl = document.getElementById('publicPump3PQty'); if (pEl) pEl.value = '0';
+                loads.motor3PQty = 0; loads.pump3PQty = 0;
+                warning.classList.remove('hidden');
+                warningText.innerHTML = 'No hay enchufes trifásicos seleccionados; las cargas trifásicas han sido deshabilitadas.';
+            }
+            if (count1P === 0 && (loads.motor1PQty > 0 || loads.pump1PQty > 0)) {
+                const m1El = document.getElementById('publicMotor1PQty'); if (m1El) m1El.value = '0';
+                const p1El = document.getElementById('publicPump1PQty'); if (p1El) p1El.value = '0';
+                loads.motor1PQty = 0; loads.pump1PQty = 0;
+                warning.classList.remove('hidden');
+                warningText.innerHTML = 'No hay enchufes monofásicos seleccionados; las cargas monofásicas han sido deshabilitadas.';
+            }
+
+            const totalLoads = loads.motor1PQty + loads.motor3PQty + loads.pump1PQty + loads.pump3PQty;
+            const totalHP = (loads.motor1PQty * loads.motor1PHPower) + 
+                            (loads.motor3PQty * loads.motor3PHPower) + 
+                            (loads.pump1PQty * loads.pump1PHPower) + 
+                            (loads.pump3PQty * loads.pump3PHPower);
+
+            if (totalLoads > 0 && totalHP > 6) {
+                warning.classList.remove('hidden');
+                warningText.innerText = `Carga especial acumulada: ${totalHP} HP. Se requiere evaluación técnica previa por alta demanda.`;
+            }
+
+            let controlLevel = 'NONE';
+            if (totalLoads > 0) {
+                controlLevel = ((loads.motorStartMethod === 'CONTACTOR') || (loads.startMethod === 'CONTACTOR')) ? 'GM_CONTROL' : 'GM_SIMPLE';
+            }
+
+            const bom = getBOMList(systemType, amperage, controlLevel, '3', count1P, count3P, loads);
             let costNeto = 0;
             bom.forEach(i => costNeto += (i.price * i.qty));
 
-            const saleNeto = costNeto / 0.65;
+            const defaultMargin = 0.35;
+            const saleNeto = costNeto / (1 - defaultMargin);
             const saleWithTax = saleNeto * 1.19;
             const rentMonthly = saleWithTax * 0.28;
 
             const finalPrice = mode === 'BUY' ? saleWithTax : rentMonthly;
 
-            document.getElementById('resTitle').innerText = `Tablero ${systemType === '1P' ? 'Monofásico' : 'Trifásico'} ${amperage}A`;
-            document.getElementById('resDesc').innerText = `${mode === 'BUY' ? 'Compra de equipo nuevo' : 'Arriendo mensual'} - Gabinete IP65 Hermético`;
-            document.getElementById('resLabel').innerText = mode === 'BUY' ? 'Precio (+IVA)' : 'Valor Mes (+IVA)';
+            // UI Updates
+            const title = `Tablero ${systemType === '1P' ? 'Monofásico' : 'Trifásico'} ${amperage}A`;
+            document.getElementById('resTitle').innerText = title;
+            document.getElementById('resLabel').innerText = mode === 'BUY' ? 'Precio Venta (+IVA)' : 'Arriendo Mensual (+IVA)';
             document.getElementById('resPrice').innerText = formatCLP(finalPrice);
+            document.getElementById('resDesc').innerText = mode === 'BUY' ? 
+                'Compra de equipo nuevo con certificación RIC SEC' : 
+                'Modalidad arriendo mensual en obra con mantención';
 
-            const summaryText = `Alimentación: ${systemType} | Amperaje: ${amperage}A | Enchufes: ${count1P}x 220V${systemType === '3P' ? ', ' + count3P + 'x 380V' : ''}`;
+            // Technical Summary
+            let loadDetails = [];
+            if (loads.motor1PQty) loadDetails.push(`${loads.motor1PQty} Motor(es) 1P (${loads.motor1PHPower}HP)`);
+            if (loads.motor3PQty) loadDetails.push(`${loads.motor3PQty} Motor(es) 3P (${loads.motor3PHPower}HP)`);
+            if (loads.pump1PQty) loadDetails.push(`${loads.pump1PQty} Bomba(s) 1P (${loads.pump1PHPower}HP)`);
+            if (loads.pump3PQty) loadDetails.push(`${loads.pump3PQty} Bomba(s) 3P (${loads.pump3PHPower}HP)`);
+
+            const startText = document.getElementById('publicStartMethod').selectedOptions[0].text;
+            const summaryText = `Alimentación: ${systemType === '1P' ? '220V' : '380V'} | Capacidad: ${amperage}A | ` +
+                `Salidas: ${count1P} Enchufes 220V${count3P ? ' + ' + count3P + ' Enchufes 380V' : ''} | ` +
+                `Cargas: ${loadDetails.length ? loadDetails.join(', ') : 'Sin cargas adicionales'} | Control: ${startText}`;
+
             document.getElementById('publicTechnicalSummaryText').innerText = summaryText;
 
-            const waMessage = encodeURIComponent(`Hola ELECTROFAENA, deseo cotizar formalmente un Tablero ${systemType} ${amperage}A. Modalidad: ${mode === 'BUY' ? 'Compra' : 'Arriendo'}. Configuración: ${summaryText}`);
-            document.getElementById('waOrderBtn').href = `https://wa.me/${WHATSAPP_NUM}?text=${waMessage}`;
+            // Update WhatsApp Link
+            const msg = encodeURIComponent(
+                `Hola ElectroFaena, solicito cotización formal:\n\n` +
+                `*Equipo:* ${title}\n` +
+                `*Modalidad:* ${mode === 'BUY' ? 'Compra' : 'Arriendo Mensual'}\n` +
+                `*Detalle:* ${summaryText}\n` +
+                `*Estimación:* ${formatCLP(finalPrice)} + IVA`
+            );
+            document.getElementById('waOrderBtn').href = `https://wa.me/${WHATSAPP_NUM}?text=${msg}`;
 
-            update3DPreview(systemType, count1P, count3P);
+            // Actualizar Modelo 3D si Three.js está activo
+            update3DModel(systemType, count1P, count3P, totalLoads);
         }
 
         // ==========================================
-        // 3. RENDERIZADOR 3D CON THREE.JS
+        // 3. ADMIN ACCESS & MODALS
         // ==========================================
-        let scene, camera, renderer, controls, currentCabinet;
-
-        function init3D() {
-            const wrapper = document.getElementById('panel3DWrapper');
-            if (!wrapper) return;
-
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x020617);
-
-            camera = new THREE.PerspectiveCamera(45, wrapper.clientWidth / wrapper.clientHeight, 0.1, 1000);
-            camera.position.set(0, 0, 5);
-
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(wrapper.clientWidth, wrapper.clientHeight);
-            wrapper.appendChild(renderer.domElement);
-
-            if (THREE.OrbitControls) {
-                controls = new THREE.OrbitControls(camera, renderer.domElement);
-                controls.enableDamping = true;
-            }
-
-            const light1 = new THREE.DirectionalLight(0xffffff, 1);
-            light1.position.set(5, 5, 5);
-            scene.add(light1);
-
-            const light2 = new THREE.AmbientLight(0x404040, 2);
-            scene.add(light2);
-
-            document.getElementById('panel3DStatus').style.display = 'none';
-
-            function animate() {
-                requestAnimationFrame(animate);
-                if (controls) controls.update();
-                renderer.render(scene, camera);
-            }
-            animate();
-        }
-
-        function update3DPreview(systemType, count1P, count3P) {
-            if (!scene) return;
-
-            if (currentCabinet) scene.remove(currentCabinet);
-
-            currentCabinet = new THREE.Group();
-
-            // Gabinete
-            const cabinetGeo = new THREE.BoxGeometry(1.6, 2.2, 0.8);
-            const cabinetMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.5, roughness: 0.3 });
-            const cabinetMesh = new THREE.Mesh(cabinetGeo, cabinetMat);
-            currentCabinet.add(cabinetMesh);
-
-            // Puerta
-            const doorGeo = new THREE.BoxGeometry(1.5, 2.1, 0.05);
-            const doorMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.4, roughness: 0.4 });
-            const doorMesh = new THREE.Mesh(doorGeo, doorMat);
-            doorMesh.position.z = 0.41;
-            currentCabinet.add(doorMesh);
-
-            // Interruptor Principal
-            const switchGeo = new THREE.BoxGeometry(0.3, 0.3, 0.1);
-            const switchMat = new THREE.MeshStandardMaterial({ color: 0xd97706 });
-            const switchMesh = new THREE.Mesh(switchGeo, switchMat);
-            switchMesh.position.set(-0.4, 0.6, 0.44);
-            currentCabinet.add(switchMesh);
-
-            scene.add(currentCabinet);
-        }
-
-        // ==========================================
-        // 4. AUTENTICACIÓN Y MODALES
-        // ==========================================
-        function checkAdminKey(event) {
+        function checkAdminKey(e) {
             adminClicks++;
             clearTimeout(adminTimer);
             if (adminClicks >= 3) {
-                openLoginModal();
                 adminClicks = 0;
+                openLoginModal();
             } else {
                 adminTimer = setTimeout(() => { adminClicks = 0; }, 1000);
             }
@@ -1132,16 +1257,18 @@
 
         function openLoginModal() {
             document.getElementById('loginModal').classList.remove('hidden');
+            document.getElementById('adminPassInput').focus();
         }
 
         function closeLoginModal() {
             document.getElementById('loginModal').classList.add('hidden');
             document.getElementById('loginError').classList.add('hidden');
+            document.getElementById('adminPassInput').value = '';
         }
 
         function submitAdminLogin() {
-            const pass = document.getElementById('adminPassInput').value;
-            if (pass === ADMIN_PIN) {
+            const input = document.getElementById('adminPassInput').value;
+            if (input === ADMIN_PIN) {
                 closeLoginModal();
                 document.getElementById('publicView').classList.add('hidden');
                 document.getElementById('publicHeader').classList.add('hidden');
@@ -1156,16 +1283,135 @@
             document.getElementById('adminView').classList.add('hidden');
             document.getElementById('publicHeader').classList.remove('hidden');
             document.getElementById('publicView').classList.remove('hidden');
+            updateQuote();
         }
 
         function toggleGuaranteeModal() {
             document.getElementById('guaranteeModal').classList.toggle('hidden');
         }
 
-        window.onload = () => {
+        // ==========================================
+        // 4. VISUALIZADOR 3D INTERACTIVO (THREE.JS)
+        // ==========================================
+        let scene, camera, renderer, controls, panelGroup;
+
+        function init3DViewer() {
+            const container = document.getElementById('panel3DWrapper');
+            if (!container || typeof THREE === 'undefined') return;
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x020617);
+
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 0, 8);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.innerHTML = '';
+            container.appendChild(renderer.domElement);
+
+            if (THREE.OrbitControls) {
+                controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.05;
+            }
+
+            // Luces
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffb700, 1);
+            dirLight.position.set(5, 10, 7);
+            scene.add(dirLight);
+
+            const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 0.5);
+            dirLight2.position.set(-5, -5, -5);
+            scene.add(dirLight2);
+
+            panelGroup = new THREE.Group();
+            scene.add(panelGroup);
+
+            animate3D();
+            
+            window.addEventListener('resize', () => {
+                if (!container || !renderer || !camera) return;
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        function update3DModel(systemType, sockets1P, sockets3P, loadsCount) {
+            if (!panelGroup) return;
+
+            // Limpiar grupo
+            while (panelGroup.children.length > 0) {
+                panelGroup.remove(panelGroup.children[0]);
+            }
+
+            // Crear Gabinete
+            const width = 2.5 + (sockets1P * 0.15);
+            const height = 3.2;
+            const depth = 1.2;
+
+            const boxGeo = new THREE.BoxGeometry(width, height, depth);
+            const boxMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8, roughness: 0.3 });
+            const cabinet = new THREE.Mesh(boxGeo, boxMat);
+            panelGroup.add(cabinet);
+
+            // Puerta / Borde
+            const doorGeo = new THREE.BoxGeometry(width * 0.95, height * 0.95, 0.05);
+            const doorMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.5, roughness: 0.4 });
+            const door = new THREE.Mesh(doorGeo, doorMat);
+            door.position.z = depth / 2 + 0.03;
+            panelGroup.add(door);
+
+            // Luces Piloto
+            const pilotGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.1, 16);
+            const pilotMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+            const pilot = new THREE.Mesh(pilotGeo, pilotMat);
+            pilot.rotation.x = Math.PI / 2;
+            pilot.position.set(-width / 3, height / 3, depth / 2 + 0.06);
+            panelGroup.add(pilot);
+
+            if (systemType === '3P') {
+                const pilot2 = pilot.clone();
+                pilot2.material = new THREE.MeshBasicMaterial({ color: 0xeab308 });
+                pilot2.position.x = 0;
+                panelGroup.add(pilot2);
+
+                const pilot3 = pilot.clone();
+                pilot3.material = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
+                pilot3.position.x = width / 3;
+                panelGroup.add(pilot3);
+            }
+
+            // Sockets simulados
+            const socketGeo = new THREE.CylinderGeometry(0.2, 0.2, 0.15, 16);
+            const socketMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.5 });
+            
+            for (let i = 0; i < Math.min(sockets1P, 6); i++) {
+                const sock = new THREE.Mesh(socketGeo, socketMat);
+                sock.rotation.x = Math.PI / 2;
+                const xPos = -width / 2.5 + (i % 3) * 0.8;
+                const yPos = -height / 4 - (Math.floor(i / 3) * 0.6);
+                sock.position.set(xPos, yPos, depth / 2 + 0.08);
+                panelGroup.add(sock);
+            }
+        }
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+            if (controls) controls.update();
+            if (renderer && scene && camera) renderer.render(scene, camera);
+        }
+
+        // Inicialización al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
             updateQuote();
-            init3D();
-        };
+            init3DViewer();
+        });
     </script>
 </body>
 </html>
