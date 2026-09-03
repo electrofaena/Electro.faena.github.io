@@ -10,10 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- three.js (r152) para visualización 3D -->
+    <!-- Three.js (r152) para renderizado 3D -->
     <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
     <script src="https://unpkg.com/three@0.152.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://unpkg.com/three@0.152.0/examples/js/loaders/GLTFLoader.js"></script>
     <style>
         html, body {
             overflow-x: hidden;
@@ -21,7 +20,6 @@
             position: relative;
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
@@ -40,7 +38,6 @@
     <!-- Navbar Global -->
     <nav class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 no-print w-full">
         <div class="max-w-6xl w-full mx-auto px-3 py-2.5 sm:py-3 flex justify-between items-center gap-2">
-            <!-- Logo con trigger secreto (3 clics) -->
             <div class="flex items-center gap-2 cursor-pointer select-none shrink-0" onclick="checkAdminKey(event)" title="Haz 3 clics para acceso de Administrador">
                 <div class="bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-slate-950 font-extrabold text-sm sm:text-base shadow-lg shadow-amber-500/20">
                     <i class="fa-solid fa-bolt-lightning"></i>
@@ -54,7 +51,6 @@
                 </div>
             </div>
             
-            <!-- Botones a la derecha -->
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <button onclick="toggleGuaranteeModal()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[11px] sm:text-xs font-bold px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl transition flex items-center gap-1 shadow-sm">
                     <i class="fa-solid fa-shield-halved text-xs sm:text-sm"></i>
@@ -163,6 +159,7 @@
                     <div>
                         <label class="block text-[11px] text-slate-400 font-medium mb-1">Enchufes Monofásicos (220V - 16A)</label>
                         <select id="publicSockets1P" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 truncate">
+                            <option value="0">0 Enchufes 220V</option>
                             <option value="2">2 Enchufes 220V (1 Dif. 30mA)</option>
                             <option value="4" selected>4 Enchufes 220V (2 Dif. 30mA indep.)</option>
                             <option value="6">6 Enchufes 220V (3 Dif. 30mA indep.)</option>
@@ -173,15 +170,19 @@
                     <div id="publicSockets3PWrapper">
                         <label class="block text-[11px] text-slate-400 font-medium mb-1">Enchufes Trifásicos (380V IP67)</label>
                         <select id="publicSockets3P" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 truncate">
+                            <option value="0">0 Enchufes 380V</option>
                             <option value="1" selected>1 Enchufe 380V (1 Dif. Tetrapolar)</option>
                             <option value="2">2 Enchufes 380V (2 Dif. Tetrapolares)</option>
                             <option value="3">3 Enchufes 380V (3 Dif. Tetrapolares XL)</option>
                         </select>
                     </div>
                 </div>
+                <p class="text-[10px] text-slate-400 italic">
+                    * Normativa SEC exige máximo 2 a 3 enchufes por diferencial para prevenir caídas por fuga.
+                </p>
             </div>
 
-            <!-- 4. Cargas Especiales -->
+            <!-- 4. Cargas especiales -->
             <div class="space-y-3 bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-amber-500/20 shadow-inner">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
                     <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -208,6 +209,7 @@
                                 <option value="0" selected>0 motores</option>
                                 <option value="1">1 motor</option><option value="2">2 motores</option>
                                 <option value="3">3 motores</option><option value="4">4 motores</option>
+                                <option value="5">5 motores</option><option value="6">6 motores</option>
                             </select>
                         </div>
                         <div>
@@ -222,6 +224,7 @@
                                 <option value="0" selected>0 motores</option>
                                 <option value="1">1 motor</option><option value="2">2 motores</option>
                                 <option value="3">3 motores</option><option value="4">4 motores</option>
+                                <option value="5">5 motores</option><option value="6">6 motores</option>
                             </select>
                         </div>
                         <div>
@@ -231,22 +234,23 @@
                             </select>
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-[10px] text-slate-400 mb-1">Arranque / Control (Motores)</label>
-                        <select id="publicMotorStartMethod" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
-                            <option value="DIRECT">Arranque Directo (Guardamotor)</option>
-                            <option value="CONTACTOR">Contactor + Relé Térmico</option>
-                            <option value="VFD">Variador de Frecuencia (VFD)</option>
-                            <option value="SOFTSTART">Partidor Suave</option>
-                        </select>
-                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] text-slate-400 mb-1">Método de arranque / control (Motores)</label>
+                    <select id="publicMotorStartMethod" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                        <option value="DIRECT">Arranque directo</option>
+                        <option value="CONTACTOR">Contactor + relé térmico</option>
+                        <option value="VFD">Variador de frecuencia</option>
+                        <option value="SOFTSTART">Partidor suave</option>
+                    </select>
                 </div>
 
                 <!-- Bombas -->
                 <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3 space-y-2.5">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
-                            <i class="fa-solid fa-droplet text-blue-400"></i> Bombas de Agua
+                            <i class="fa-solid fa-droplet text-blue-400"></i> Bombas de agua
                         </span>
                         <span class="text-[9px] text-slate-500">Circuitos independientes</span>
                     </div>
@@ -258,6 +262,7 @@
                                 <option value="0" selected>0 bombas</option>
                                 <option value="1">1 bomba</option><option value="2">2 bombas</option>
                                 <option value="3">3 bombas</option><option value="4">4 bombas</option>
+                                <option value="5">5 bombas</option><option value="6">6 bombas</option>
                             </select>
                         </div>
                         <div>
@@ -272,6 +277,7 @@
                                 <option value="0" selected>0 bombas</option>
                                 <option value="1">1 bomba</option><option value="2">2 bombas</option>
                                 <option value="3">3 bombas</option><option value="4">4 bombas</option>
+                                <option value="5">5 bombas</option><option value="6">6 bombas</option>
                             </select>
                         </div>
                         <div>
@@ -281,21 +287,26 @@
                             </select>
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-[10px] text-slate-400 mb-1">Arranque / Control (Bombas)</label>
-                        <select id="publicStartMethod" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
-                            <option value="DIRECT">Arranque Directo (Guardamotor)</option>
-                            <option value="CONTACTOR">Contactor + Relé Térmico</option>
-                            <option value="VFD">Variador de Frecuencia (VFD)</option>
-                            <option value="SOFTSTART">Partidor Suave</option>
-                        </select>
-                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] text-slate-400 mb-1">Método de arranque / control</label>
+                    <select id="publicStartMethod" onchange="updateQuote()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                        <option value="DIRECT">Arranque directo</option>
+                        <option value="CONTACTOR">Contactor + relé térmico</option>
+                        <option value="VFD">Variador de frecuencia</option>
+                        <option value="SOFTSTART">Partidor suave</option>
+                    </select>
                 </div>
 
                 <div id="publicLoadWarning" class="hidden p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-[11px] text-amber-300 flex items-start gap-2">
                     <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-0.5 shrink-0"></i>
                     <span id="publicLoadWarningText"></span>
                 </div>
+
+                <p class="text-[10px] text-slate-500 italic">
+                    * La selección de HP es una estimación preliminar. La protección definitiva debe verificarse con datos de placa del equipo.
+                </p>
             </div>
 
             <!-- 5. Modalidad -->
@@ -307,48 +318,59 @@
                     <label class="cursor-pointer">
                         <input type="radio" name="publicServiceMode" value="BUY" checked onchange="updateQuote()" class="peer sr-only">
                         <div class="p-2.5 sm:p-3 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-emerald-500 peer-checked:bg-emerald-600/10 peer-checked:text-emerald-400 transition text-center font-bold text-xs">
-                            <i class="fa-solid fa-cart-shopping mr-1"></i> Comprar Equipo
+                            <i class="fa-solid fa-cart-shopping mr-1"></i> Comprar
                         </div>
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="publicServiceMode" value="RENT" onchange="updateQuote()" class="peer sr-only">
                         <div class="p-2.5 sm:p-3 rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/10 peer-checked:text-amber-300 transition text-center font-bold text-xs">
-                            <i class="fa-solid fa-calendar-days mr-1"></i> Arriendo Mensual
+                            <i class="fa-solid fa-calendar-days mr-1"></i> Arriendo
                         </div>
                     </label>
                 </div>
             </div>
 
-            <!-- Card de Cotización Resultante -->
+            <!-- Card Resultante -->
             <div class="bg-slate-950 rounded-xl p-4 sm:p-5 border border-amber-500/30 space-y-3.5 shadow-lg shadow-amber-500/5 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none"></div>
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
                     <div>
                         <h2 class="font-bold text-sm sm:text-base text-white flex items-center gap-2" id="resTitle">
                             Tablero Monofásico 32A
                         </h2>
-                        <p class="text-xs text-slate-400" id="resDesc">Compra de equipo nuevo - Gabinete Hermético IP65</p>
+                        <p class="text-xs text-slate-400" id="resDesc">Compra de equipo nuevo - Gabinete IP65 Hermético</p>
                     </div>
                     <div class="text-left sm:text-right">
-                        <span class="text-[10px] font-bold text-amber-400 uppercase block" id="resLabel">Precio Total (+IVA)</span>
+                        <span class="text-[10px] font-bold text-amber-400 uppercase block" id="resLabel">Precio (+IVA)</span>
                         <span class="text-xl sm:text-2xl font-black text-amber-400 font-mono" id="resPrice">$0</span>
                     </div>
                 </div>
 
                 <div id="publicTechnicalSummary" class="bg-slate-900/70 rounded-xl p-3 border border-slate-800 text-[10px] text-slate-400">
                     <div class="flex items-center gap-2 text-slate-200 font-bold mb-1">
-                        <i class="fa-solid fa-list-check text-amber-400"></i> Resumen Técnico de Configuración
+                        <i class="fa-solid fa-list-check text-amber-400"></i> Resumen técnico preliminar
                     </div>
-                    <div id="publicTechnicalSummaryText">Cargando parámetros...</div>
+                    <div id="publicTechnicalSummaryText">Configuración inicial.</div>
+                </div>
+
+                <!-- 3D Viewer -->
+                <div class="mt-4">
+                    <label class="block text-[10px] text-slate-400 mb-1">Visualizador 3D del tablero</label>
+                    <div id="panel3DWrapper" class="w-full h-72 bg-black rounded-xl border border-slate-800 overflow-hidden relative">
+                        <div id="panel3DStatus" class="text-[10px] text-slate-400 p-2 absolute z-10 pointer-events-none">Cargando modelo 3D...</div>
+                    </div>
+                    <p class="text-[10px] text-slate-500 italic mt-2">Interactúa: rotar (arrastrar), zoom (scroll), desplazar (shift + arrastrar).</p>
                 </div>
 
                 <a id="waOrderBtn" href="#" target="_blank" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-3 sm:py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-xs shadow-xl shadow-amber-500/20 active:scale-[0.98]">
                     <i class="fa-brands fa-whatsapp text-base"></i> Solicitar Cotización Formal por WhatsApp
                 </a>
             </div>
+
         </div>
     </main>
 
-    <!-- VISTA PRIVADA (PANEL DE COSTOS EMPRESARIAL) -->
+    <!-- VISTA PRIVADA (ADMIN) -->
     <main id="adminView" class="hidden flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-2xl relative overflow-hidden">
             <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600"></div>
@@ -357,16 +379,19 @@
                     <i class="fa-solid fa-calculator"></i>
                 </div>
                 <div>
-                    <span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
-                        <i class="fa-solid fa-shield-halved mr-1"></i> Panel Interno
-                    </span>
-                    <h2 class="text-base sm:text-xl font-extrabold text-white mt-0.5">Ingeniería de Costos y Márgenes</h2>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+                            <i class="fa-solid fa-shield-halved mr-1"></i> Modo Administración
+                        </span>
+                    </div>
+                    <h2 class="text-base sm:text-xl font-extrabold text-white mt-0.5">Panel de Costos Empresarial</h2>
+                    <p class="text-xs text-slate-400">Análisis Interno de Márgenes de Venta & Arriendo</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-2 no-print w-full sm:w-auto justify-end">
                 <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 border border-slate-700">
-                    <i class="fa-solid fa-print"></i> Imprimir BOM
+                    <i class="fa-solid fa-print"></i> Imprimir
                 </button>
                 <button onclick="logoutAdmin()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold px-3 py-2 rounded-xl transition border border-red-500/30 flex items-center gap-1.5">
                     <i class="fa-solid fa-right-from-bracket"></i> Salir
@@ -375,42 +400,47 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-            <!-- Configuración Admin -->
             <section class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4 no-print">
                 <div class="border-b border-slate-800 pb-3">
                     <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-sliders"></i> Parámetros de Insumos
+                        <i class="fa-solid fa-sliders"></i> Parámetros de Insumos & Margen
                     </h3>
+                    <p class="text-xs text-slate-400">Costos a Precio de Mercado Mayorista</p>
                 </div>
 
                 <form class="space-y-3.5" onsubmit="event.preventDefault();">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Alimentación</label>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Alimentación Eléctrica</label>
                         <div class="grid grid-cols-2 gap-2">
                             <label class="cursor-pointer">
                                 <input type="radio" name="systemType" value="1P" checked onchange="updateCalculations()" class="peer sr-only">
-                                <div class="p-2 text-center text-xs rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/20 peer-checked:text-amber-300 font-bold transition">Monofásico</div>
+                                <div class="p-2 text-center text-xs rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/20 peer-checked:text-amber-300 font-bold transition">
+                                    Monofásico (220V)
+                                </div>
                             </label>
                             <label class="cursor-pointer">
                                 <input type="radio" name="systemType" value="3P" onchange="updateCalculations()" class="peer sr-only">
-                                <div class="p-2 text-center text-xs rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/20 peer-checked:text-amber-300 font-bold transition">Trifásico</div>
+                                <div class="p-2 text-center text-xs rounded-xl border border-slate-800 bg-slate-950 peer-checked:border-amber-400 peer-checked:bg-amber-500/20 peer-checked:text-amber-300 font-bold transition">
+                                    Trifásico (380V)
+                                </div>
                             </label>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Capacidad Amperaje</label>
-                        <select id="amperage" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200">
-                            <option value="32">32A General</option>
-                            <option value="40">40A General</option>
-                            <option value="63" id="admin63aOpt">63A General</option>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Amperaje Principal</label>
+                        <select id="amperage" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500 truncate">
+                            <option value="32">32 Amperes (Faena Ligera)</option>
+                            <option value="40">40 Amperes (Obra Estándar)</option>
+                            <option value="63" id="admin63aOpt">63 Amperes (Distribución Pesada)</option>
                         </select>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Enchufes 220V</label>
-                            <select id="adminSockets1P" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Cant. Enchufes 220V</label>
+                            <select id="adminSockets1P" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                                <option value="0">0 Enchufes</option>
                                 <option value="2">2 Enchufes</option>
                                 <option value="4" selected>4 Enchufes</option>
                                 <option value="6">6 Enchufes</option>
@@ -418,8 +448,9 @@
                             </select>
                         </div>
                         <div id="adminSockets3PBox">
-                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Enchufes 380V</label>
-                            <select id="adminSockets3P" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Cant. Enchufes 380V</label>
+                            <select id="adminSockets3P" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                                <option value="0">0 Enchufes</option>
                                 <option value="1" selected>1 Enchufe</option>
                                 <option value="2">2 Enchufes</option>
                                 <option value="3">3 Enchufes</option>
@@ -427,136 +458,160 @@
                         </div>
                     </div>
 
-                    <!-- Cargas Especiales Admin -->
                     <div class="space-y-3 border-t border-slate-800 pt-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-amber-400 mb-1">
+                                <i class="fa-solid fa-gears mr-1"></i> Cargas Especiales
+                            </label>
+                            <p class="text-[10px] text-slate-500">Las cargas trifásicas se bloquean automáticamente en tableros monofásicos.</p>
+                        </div>
+
+                        <!-- Motores -->
                         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-                            <span class="text-[11px] font-bold text-slate-200 block">⚙️ Motores</span>
+                            <div class="flex justify-between items-center">
+                                <span class="text-[11px] font-bold text-slate-200">⚙️ Motores</span>
+                                <span class="text-[9px] text-slate-500">1–3 HP</span>
+                            </div>
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
-                                    <label class="block text-[10px] text-slate-400">1P Cant.</label>
-                                    <select id="adminMotor1PQty" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200">
-                                        <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+                                    <label class="block text-[10px] text-slate-400 mb-1">Monofásicos</label>
+                                    <select id="adminMotor1PQty" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
+                                        <option value="0">0 motores</option><option value="1">1 motor</option><option value="2">2 motores</option>
+                                        <option value="3">3 motores</option><option value="4">4 motores</option><option value="5">5 motores</option><option value="6">6 motores</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] text-slate-400">1P HP</label>
-                                    <select id="adminMotor1PHPower" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200">
+                                    <label class="block text-[10px] text-slate-400 mb-1">Potencia</label>
+                                    <select id="adminMotor1PHPower" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
                                         <option value="1">1 HP</option><option value="2">2 HP</option><option value="3">3 HP</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] text-slate-400">3P Cant.</label>
-                                    <select id="adminMotor3PQty" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200">
-                                        <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+                                    <label class="block text-[10px] text-slate-400 mb-1">Trifásicos</label>
+                                    <select id="adminMotor3PQty" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
+                                        <option value="0">0 motores</option><option value="1">1 motor</option><option value="2">2 motores</option>
+                                        <option value="3">3 motores</option><option value="4">4 motores</option><option value="5">5 motores</option><option value="6">6 motores</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] text-slate-400">3P HP</label>
-                                    <select id="adminMotor3PHPower" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200">
+                                    <label class="block text-[10px] text-slate-400 mb-1">Potencia</label>
+                                    <select id="adminMotor3PHPower" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
                                         <option value="1">1 HP</option><option value="2">2 HP</option><option value="3">3 HP</option>
                                     </select>
                                 </div>
                             </div>
+
                             <div>
-                                <label class="block text-[10px] text-slate-400 mb-1">Método Arranque Motores</label>
+                                <label class="block text-[10px] text-slate-400 mb-1">Método de arranque / control (Motores)</label>
                                 <select id="adminMotorStartMethod" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
-                                    <option value="DIRECT">Arranque Directo</option>
-                                    <option value="CONTACTOR">Contactor + Relé Térmico</option>
-                                    <option value="VFD">Variador VFD</option>
-                                    <option value="SOFTSTART">Partidor Suave</option>
+                                    <option value="DIRECT">Arranque directo</option>
+                                    <option value="CONTACTOR">Contactor + relé térmico</option>
+                                    <option value="VFD">Variador de frecuencia</option>
+                                    <option value="SOFTSTART">Partidor suave</option>
                                 </select>
                             </div>
                         </div>
 
+                        <!-- Bombas -->
                         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-                            <span class="text-[11px] font-bold text-slate-200 block">💧 Bombas</span>
+                            <div class="flex justify-between items-center">
+                                <span class="text-[11px] font-bold text-slate-200">💧 Bombas de agua</span>
+                                <span class="text-[9px] text-slate-500">1–3 HP</span>
+                            </div>
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
-                                    <label class="block text-[10px] text-slate-400">1P Cant.</label>
-                                    <select id="adminPump1PQty" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200">
-                                        <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+                                    <label class="block text-[10px] text-slate-400 mb-1">Monofásicas</label>
+                                    <select id="adminPump1PQty" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
+                                        <option value="0">0 bombas</option><option value="1">1 bomba</option><option value="2">2 bombas</option>
+                                        <option value="3">3 bombas</option><option value="4">4 bombas</option><option value="5">5 bombas</option><option value="6">6 bombas</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] text-slate-400">1P HP</label>
-                                    <select id="adminPump1PHPower" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200">
+                                    <label class="block text-[10px] text-slate-400 mb-1">Potencia</label>
+                                    <select id="adminPump1PHPower" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
                                         <option value="1">1 HP</option><option value="2">2 HP</option><option value="3">3 HP</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] text-slate-400">3P Cant.</label>
-                                    <select id="adminPump3PQty" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200">
-                                        <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+                                    <label class="block text-[10px] text-slate-400 mb-1">Trifásicas</label>
+                                    <select id="adminPump3PQty" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
+                                        <option value="0">0 bombas</option><option value="1">1 bomba</option><option value="2">2 bombas</option>
+                                        <option value="3">3 bombas</option><option value="4">4 bombas</option><option value="5">5 bombas</option><option value="6">6 bombas</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] text-slate-400">3P HP</label>
-                                    <select id="adminPump3PHPower" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200">
+                                    <label class="block text-[10px] text-slate-400 mb-1">Potencia</label>
+                                    <select id="adminPump3PHPower" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
                                         <option value="1">1 HP</option><option value="2">2 HP</option><option value="3">3 HP</option>
                                     </select>
                                 </div>
                             </div>
-                            <div>
-                                <label class="block text-[10px] text-slate-400 mb-1">Método Arranque Bombas</label>
-                                <select id="adminStartMethod" onchange="updateCalculations()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
-                                    <option value="DIRECT">Arranque Directo</option>
-                                    <option value="CONTACTOR">Contactor + Relé Térmico</option>
-                                    <option value="VFD">Variador VFD</option>
-                                    <option value="SOFTSTART">Partidor Suave</option>
-                                </select>
-                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-1">Método de arranque / control</label>
+                            <select id="adminStartMethod" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
+                                <option value="DIRECT">Arranque directo</option>
+                                <option value="CONTACTOR">Contactor + relé térmico</option>
+                                <option value="VFD">Variador de frecuencia</option>
+                                <option value="SOFTSTART">Partidor suave</option>
+                            </select>
+                        </div>
+
+                        <div id="adminLoadWarning" class="hidden p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-[10px] text-amber-300">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i>
+                            <span id="adminLoadWarningText"></span>
                         </div>
                     </div>
 
                     <div class="border-t border-slate-800 pt-3">
                         <div class="flex justify-between items-center mb-1">
-                            <label class="block text-xs font-semibold text-slate-300">Margen Comercial (%)</label>
+                            <label class="block text-xs font-semibold text-slate-300">Margen Venta (%)</label>
                             <span id="targetMarginLabel" class="text-xs font-bold text-amber-400">35%</span>
                         </div>
-                        <input type="number" id="targetMargin" value="35" min="10" max="80" oninput="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-amber-400 font-bold">
+                        <input type="number" id="targetMargin" value="35" min="10" max="80" oninput="updateCalculations()" onchange="updateCalculations()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-amber-400 font-bold focus:outline-none focus:border-amber-500">
                     </div>
                 </form>
             </section>
 
-            <!-- Tabla de Costos Admin -->
             <section class="lg:col-span-7 space-y-4 sm:space-y-5">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl print-card space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
                         <div>
-                            <span class="text-[10px] font-extrabold text-amber-400 uppercase tracking-wider">Desglose de Costos de Mercado</span>
-                            <h2 class="text-lg sm:text-xl font-bold text-white" id="panelTitle">Tablero de Faena</h2>
-                            <p class="text-xs text-slate-400" id="panelSubtitle">Alimentación General Normada</p>
+                            <span class="text-[10px] font-extrabold text-amber-400 uppercase tracking-wider">CÁLCULO CON COSTO FERRETERÍA</span>
+                            <h2 class="text-lg sm:text-xl font-bold text-white" id="panelTitle">Tablero Monofásico 32A</h2>
+                            <p class="text-xs text-slate-400" id="panelSubtitle">Alimentación 220V - Faena y Distribución</p>
                         </div>
                         <div class="text-left sm:text-right">
-                            <span class="text-[10px] text-slate-400 block uppercase font-bold">Costo Neto Insumos</span>
+                            <span class="text-[10px] text-slate-400 block uppercase font-bold">Costo Insumos Neto</span>
                             <span class="text-xl sm:text-2xl font-mono font-bold text-amber-400" id="totalCostNeto">$0</span>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-3 gap-2 sm:gap-3 text-center">
-                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                            <span class="text-[9px] sm:text-[10px] text-slate-400 block uppercase font-bold">P. Venta (+IVA)</span>
+                        <div class="bg-slate-950 p-2 sm:p-3 rounded-xl border border-slate-800">
+                            <span class="text-[9px] sm:text-[10px] text-slate-400 block uppercase font-bold">Venta (+IVA)</span>
                             <span class="text-xs sm:text-base font-extrabold text-emerald-400 font-mono" id="salePriceWithTax">$0</span>
                         </div>
-                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                        <div class="bg-slate-950 p-2 sm:p-3 rounded-xl border border-slate-800">
                             <span class="text-[9px] sm:text-[10px] text-slate-400 block uppercase font-bold">Utilidad Neto</span>
                             <span class="text-xs sm:text-base font-extrabold text-blue-400 font-mono" id="profitNeto">$0</span>
                         </div>
-                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                        <div class="bg-slate-950 p-2 sm:p-3 rounded-xl border border-slate-800">
                             <span class="text-[9px] sm:text-[10px] text-slate-400 block uppercase font-bold">Arriendo/Mes</span>
                             <span class="text-xs sm:text-base font-extrabold text-purple-400 font-mono" id="rentMonthly">$0</span>
                         </div>
                     </div>
 
                     <div class="space-y-2 pt-2">
-                        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Lista de Materiales (BOM):</h3>
-                        <div class="overflow-x-auto w-full">
+                        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Desglose de Materiales:</h3>
+                        <div class="overflow-x-auto w-full block">
                             <table class="w-full text-left text-xs min-w-[340px]">
                                 <thead>
                                     <tr class="border-b border-slate-800 text-slate-400 uppercase font-bold">
-                                        <th class="p-2">Insumo / Componente</th>
+                                        <th class="p-2">Ítem</th>
                                         <th class="p-2 text-center">Cant.</th>
-                                        <th class="p-2 text-right">P. Unit</th>
+                                        <th class="p-2 text-right">Unitario</th>
                                         <th class="p-2 text-right">Subtotal</th>
                                         <th class="p-2 text-center no-print">Link</th>
                                     </tr>
@@ -571,45 +626,66 @@
         </div>
     </main>
 
-    <!-- Modal Garantía -->
+    <!-- Modales -->
     <div id="guaranteeModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl relative">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 sm:p-6 space-y-4 sm:space-y-5 shadow-2xl relative">
             <button onclick="toggleGuaranteeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
             <div class="text-center space-y-2">
-                <div class="bg-amber-500/20 text-amber-400 w-12 h-12 rounded-full flex items-center justify-center mx-auto border border-amber-500/30">
-                    <i class="fa-solid fa-shield-halved text-xl"></i>
+                <div class="bg-amber-500/20 text-amber-400 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mx-auto border border-amber-500/30">
+                    <i class="fa-solid fa-shield-halved text-xl sm:text-2xl"></i>
                 </div>
-                <h3 class="font-black text-lg text-white">Garantía Técnica SEC ElectroFaena</h3>
+                <h3 class="font-black text-lg sm:text-xl text-white">Garantía Técnica SEC ElectroFaena</h3>
                 <p class="text-xs text-slate-400">12 Meses de Cobertura Total en Obra</p>
             </div>
             <div class="space-y-2 text-xs text-slate-300">
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <span class="font-bold text-amber-400 block">1. Cobertura de Componentes</span>
-                    <p class="text-slate-400 text-[11px]">Reemplazo inmediato ante fallas de fábrica.</p>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                    <span class="font-bold text-amber-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-check text-emerald-400"></i> 1. Cobertura de Componentes
+                    </span>
+                    <p class="text-slate-400 text-[11px]">Reemplazo inmediato por falla de fábrica en protecciones.</p>
                 </div>
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <span class="font-bold text-amber-400 block">2. Hermeticidad IP65</span>
-                    <p class="text-slate-400 text-[11px]">Protección garantizada ante intemperie y polvo.</p>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                    <span class="font-bold text-amber-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-box-archive text-amber-400"></i> 2. Hermeticidad IP65
+                    </span>
+                    <p class="text-slate-400 text-[11px]">Garantía de estanqueidad en gabinete metálico ante intemperie.</p>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                    <span class="font-bold text-amber-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-contract text-blue-400"></i> 3. Pliego RIC N°02 SEC
+                    </span>
+                    <p class="text-slate-400 text-[11px]">Certificado y pre-configurado para inspección TE1 SEC.</p>
                 </div>
             </div>
-            <button onclick="toggleGuaranteeModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold py-2.5 rounded-xl transition">Cerrar</button>
+            <div class="pt-2 flex gap-2">
+                <a href="mailto:electro.faena.sis@gmail.com?subject=Solicitud%20de%20Garantia%20ELECTROFAENA" class="flex-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold py-2.5 rounded-xl transition text-center">
+                    <i class="fa-solid fa-envelope mr-1"></i> Reportar
+                </a>
+                <button onclick="toggleGuaranteeModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                    Cerrar
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Modal Login Admin -->
     <div id="loginModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 max-w-sm w-full space-y-4 shadow-2xl">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-sm w-full space-y-4 shadow-2xl">
             <div class="text-center space-y-1">
-                <i class="fa-solid fa-lock text-2xl text-blue-400 mb-1"></i>
+                <div class="inline-flex p-3 bg-blue-600/10 text-blue-400 rounded-xl mb-1">
+                    <i class="fa-solid fa-lock text-2xl"></i>
+                </div>
                 <h3 class="text-lg font-bold text-white">Acceso Administrador</h3>
+                <p class="text-xs text-slate-400">Ingresa tu clave privada de ELECTROFAENA</p>
             </div>
-            <input type="password" id="adminPassInput" placeholder="Clave de acceso" onkeyup="if(event.key==='Enter') submitAdminLogin()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white text-center font-mono">
-            <p id="loginError" class="hidden text-[11px] text-red-400 text-center font-bold">Clave incorrecta</p>
+            <div class="space-y-2">
+                <input type="password" id="adminPassInput" placeholder="Contraseña privada" onkeyup="if(event.key==='Enter') submitAdminLogin()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white text-center font-mono focus:outline-none focus:border-blue-500">
+                <p id="loginError" class="hidden text-[11px] text-red-400 text-center font-bold">Contraseña incorrecta</p>
+            </div>
             <div class="flex gap-2">
-                <button onclick="closeLoginModal()" class="w-1/2 bg-slate-800 text-slate-300 text-xs font-bold py-2.5 rounded-xl">Cancelar</button>
-                <button onclick="submitAdminLogin()" class="w-1/2 bg-blue-600 text-white text-xs font-bold py-2.5 rounded-xl">Ingresar</button>
+                <button onclick="closeLoginModal()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold py-2.5 rounded-xl transition">Cancelar</button>
+                <button onclick="submitAdminLogin()" class="w-1/2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2.5 rounded-xl transition">Ingresar</button>
             </div>
         </div>
     </div>
@@ -617,11 +693,11 @@
     <footer class="bg-slate-900 border-t border-slate-800 p-4 text-center text-[11px] text-slate-500 no-print flex flex-col sm:flex-row justify-between items-center max-w-6xl mx-auto w-full gap-2">
         <span>ELECTROFAENA SpA &copy; 2026 - Certificación & Ingeniería de Control</span>
         <button onclick="openLoginModal()" class="text-slate-600 hover:text-slate-400 transition flex items-center gap-1 text-[10px]">
-            <i class="fa-solid fa-lock"></i> Panel Interno
+            <i class="fa-solid fa-lock"></i> Acceso Interno
         </button>
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT INTEGRADA Y SINCRONIZADA -->
+    <!-- LÓGICA JAVASCRIPT COMPLETA Y CORREGIDA -->
     <script>
         const WHATSAPP_NUM = "56932810327";
         const ADMIN_PIN = "@INSIDE12";
@@ -658,11 +734,13 @@
             },
             BUSBARS: {
                 "2P_UP": { name: "Barra Repartidora Bipolar 2P 100A Arriba", price: 8990, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-bipolar-2p" },
-                "4P_UP": { name: "Barra Repartidora Tetrapolar 4P 125A Arriba", price: 14500, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-tetrapolar" }
+                "2P_DOWN": { name: "Barra Repartidora Bipolar 2P DIN Abajo", price: 6800, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-bipolar-2p" },
+                "4P_UP": { name: "Barra Repartidora Tetrapolar 4P 125A Arriba", price: 14500, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-tetrapolar" },
+                "4P_DOWN": { name: "Barra Repartidora Tetrapolar 4P DIN Abajo", price: 11200, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-tetrapolar" }
             },
             MALE_PLUGS: {
-                "1P": { name: "Enchufe Macho Industrial 16A 2P+T IP44", price: 4890, link: "https://www.easy.cl/tienda/search?w=enchufe%20macho%20industrial%20monofasico" },
-                "3P": { name: "Enchufe Macho Industrial 32A 3P+N+T IP67", price: 11900, link: "https://www.easy.cl/tienda/search?w=enchufe%20macho%20industrial%20trifasico" }
+                "1P": { name: "Enchufe Macho Industrial 16A/32A 2P+T IP44", price: 4890, link: "https://www.easy.cl/tienda/search?w=enchufe%20macho%20industrial%20monofasico" },
+                "3P": { name: "Enchufe Macho Industrial 32A/63A 3P+N+T IP67", price: 11900, link: "https://www.easy.cl/tienda/search?w=enchufe%20macho%20industrial%20trifasico" }
             },
             GUARDAMOTORS: {
                 "1": { name: "Guardamotor Regulable 1.6 - 2.5A", price: 27390, link: "https://www.ferrelectrica.cl/product/guardamotor-me07c-1-6-2-5a-660v-lexo" },
@@ -675,16 +753,18 @@
                 "3": { name: "Contactor 18A 220VAC", price: 11086, link: "https://www.ferrelectrica.cl/product/contactor-d1810m7-18a-1no-ip20-lexo" }
             },
             MOTOR_CONTROL: {
-                DIRECT: { name: "Módulo Control: Arranque Directo", price: 0, link: "#" },
-                CONTACTOR: { name: "Módulo Control: Contactor + Térmico", price: 12500, link: "#" },
-                VFD: { name: "Módulo Control: Variador de Frecuencia (VFD)", price: 85000, link: "#" },
-                SOFTSTART: { name: "Módulo Control: Partidor Suave", price: 65000, link: "#" }
+                DIRECT: { name: "Control de motor: arranque directo", price: 0, link: "#" },
+                CONTACTOR: { name: "Control de motor: contactor + relé térmico", price: 0, link: "#" },
+                VFD: { name: "Variador de frecuencia (precio por configurar)", price: 0, link: "#" },
+                SOFTSTART: { name: "Partidor suave (precio por configurar)", price: 0, link: "#" }
             },
             MISC: {
+                SHUNT_RELEASE: { name: "Bobina de Disparo MX 220V AC", price: 8990, link: "https://www.ferrelectrica.cl/product/bobina-de-disparo-mx-220v-nxb-63" },
                 EMERGENCY_BUTTON: { name: "Botonera Parada Emergencia Seta NC", price: 6890, link: "https://www.easy.cl/tienda/search?w=botonera%20emergencia" },
                 PILOT_LIGHT: { name: "Luz Piloto LED Modular 220V DIN", price: 2490, link: "https://www.ferrelectrica.cl/product/luz-piloto-modular-220v-red" },
                 PLUG_CEE_1P: { name: "Enchufe Hembra 16A 2P+T IP44", price: 5690, link: "https://www.easy.cl/tienda/search?w=enchufe%20industrial" },
                 PLUG_CEE_3P: { name: "Enchufe Hembra Sobretopo 32A 3P+N+T IP67", price: 13500, link: "https://www.easy.cl/tienda/search?w=enchufe%20industrial%20trifasico" },
+                CONTROL_PACK: { name: "Kit Mando: Selector + Luces LED", price: 12500, link: "https://www.easy.cl/tienda/search?w=selector%203%20posiciones" },
                 MOTOR_TERMINALS: { name: "Set Borneras DIN + Prensaestopas IP68", price: 8500, link: "https://www.ferrelectrica.cl/product/bloque-repartidor-bipolar-2p" }
             }
         };
@@ -692,63 +772,76 @@
         function getBOMList(systemType, amperage, controlLevel, motorPower, count1P, count3P, loads = {}) {
             const list = [];
             const totalSockets = count1P + (systemType === '3P' ? count3P : 0);
-            const totalMotorLoads = (loads.motor1PQty || 0) + (loads.motor3PQty || 0);
-            const totalPumpLoads = (loads.pump1PQty || 0) + (loads.pump3PQty || 0);
-            const totalLoads = totalMotorLoads + totalPumpLoads;
+            const totalLoads = (loads.motor1PQty || 0) + (loads.motor3PQty || 0) +
+                               (loads.pump1PQty || 0) + (loads.pump3PQty || 0);
 
-            // Selección Dinámica del Gabinete
             let cabinetKey = 'SMALL';
             const componentCount = totalSockets + totalLoads;
-            if (componentCount >= 8 || (systemType === '3P' && amperage === '63')) cabinetKey = 'XL';
-            else if (componentCount >= 5 || systemType === '3P') cabinetKey = 'LARGE';
-            else if (componentCount >= 2) cabinetKey = 'MEDIUM';
+            if (componentCount >= 8 || (systemType === '3P' && amperage === '63')) {
+                cabinetKey = 'XL';
+            } else if (componentCount >= 5 || systemType === '3P') {
+                cabinetKey = 'LARGE';
+            } else if (componentCount >= 2) {
+                cabinetKey = 'MEDIUM';
+            }
             list.push({ ...CATALOG_FULL.CABINETS[cabinetKey], qty: 1 });
 
-            // Protección General y Diferencial
-            list.push({ ...CATALOG_FULL.AUTOMATICS[`${systemType}_${amperage}A`], qty: 1 });
-            list.push({ ...CATALOG_FULL.DIFFERENTIALS[`${systemType}_${amperage}A`], qty: 1 });
+            const autoKey = `${systemType}_${amperage}A`;
+            if (CATALOG_FULL.AUTOMATICS[autoKey]) {
+                list.push({ ...CATALOG_FULL.AUTOMATICS[autoKey], qty: 1 });
+            }
 
-            // Repartición y Conexión
-            list.push({ ...CATALOG_FULL.BUSBARS[systemType === '1P' ? '2P_UP' : '4P_UP'], qty: 1 });
+            const diffKey = `${systemType}_${amperage}A`;
+            if (CATALOG_FULL.DIFFERENTIALS[diffKey]) {
+                list.push({ ...CATALOG_FULL.DIFFERENTIALS[diffKey], qty: 1 });
+            }
+
+            const busKey = systemType === '1P' ? '2P_UP' : '4P_UP';
+            list.push({ ...CATALOG_FULL.BUSBARS[busKey], qty: 1 });
             list.push({ ...CATALOG_FULL.MALE_PLUGS[systemType], qty: 1 });
 
-            // Salidas Enchufes 1P
             if (count1P > 0) {
                 list.push({ ...CATALOG_FULL.MISC.PLUG_CEE_1P, qty: count1P });
                 list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: Math.ceil(count1P / 2) });
                 list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: Math.ceil(count1P / 2) });
             }
 
-            // Salidas Enchufes 3P
             if (systemType === '3P' && count3P > 0) {
                 list.push({ ...CATALOG_FULL.MISC.PLUG_CEE_3P, qty: count3P });
                 list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_3P, qty: count3P });
                 list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P, qty: count3P });
             }
 
-            // Lógica para Motores
-            if (totalMotorLoads > 0) {
-                const method = loads.motorStartMethod || 'DIRECT';
-                list.push({ ...CATALOG_FULL.MOTOR_CONTROL[method], qty: totalMotorLoads });
-                if (method === 'CONTACTOR') {
-                    list.push({ ...CATALOG_FULL.CONTACTORS['3'], qty: totalMotorLoads });
-                }
-                list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalMotorLoads });
-                list.push({ ...CATALOG_FULL.MISC.MOTOR_TERMINALS, qty: totalMotorLoads });
+            const motor1PQty = loads.motor1PQty || 0;
+            const motor3PQty = loads.motor3PQty || 0;
+            const pump1PQty = loads.pump1PQty || 0;
+            const pump3PQty = loads.pump3PQty || 0;
+            const startMethod = loads.startMethod || 'DIRECT';
+
+            const special1P = motor1PQty + pump1PQty;
+            const special3P = motor3PQty + pump3PQty;
+
+            if (special1P > 0) {
+                list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_2P, qty: special1P });
+                list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_2P, qty: special1P });
             }
 
-            // Lógica para Bombas
-            if (totalPumpLoads > 0) {
-                const method = loads.startMethod || 'DIRECT';
-                list.push({ ...CATALOG_FULL.MOTOR_CONTROL[method], qty: totalPumpLoads });
-                if (method === 'CONTACTOR') {
-                    list.push({ ...CATALOG_FULL.CONTACTORS['3'], qty: totalPumpLoads });
-                }
-                list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalPumpLoads });
-                list.push({ ...CATALOG_FULL.MISC.MOTOR_TERMINALS, qty: totalPumpLoads });
+            if (systemType === '3P' && special3P > 0) {
+                list.push({ ...CATALOG_FULL.AUTOMATICS.PROT_3P, qty: special3P });
+                list.push({ ...CATALOG_FULL.DIFFERENTIALS.DIFF_3P, qty: special3P });
             }
 
-            // Seguridad
+            if (totalLoads > 0) {
+                list.push({ ...CATALOG_FULL.MOTOR_CONTROL[startMethod], qty: totalLoads });
+                if (startMethod === 'CONTACTOR') {
+                    list.push({ ...CATALOG_FULL.CONTACTORS['3'], qty: totalLoads });
+                    list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalLoads });
+                } else {
+                    list.push({ ...CATALOG_FULL.GUARDAMOTORS['3'], qty: totalLoads });
+                }
+                list.push({ ...CATALOG_FULL.MISC.MOTOR_TERMINALS, qty: totalLoads });
+            }
+
             list.push({ ...CATALOG_FULL.MISC.EMERGENCY_BUTTON, qty: 1 });
             list.push({ ...CATALOG_FULL.MISC.PILOT_LIGHT, qty: systemType === '1P' ? 1 : 3 });
 
@@ -759,127 +852,282 @@
             return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(val);
         }
 
+        // ==========================================
+        // 1. LÓGICA DE B.O.M Y CÁLCULOS PRIVADOS (ADMIN)
+        // ==========================================
+        function updateCalculations() {
+            const systemType = document.querySelector('input[name="systemType"]:checked').value;
+            const amperageSelect = document.getElementById('amperage');
+            const admin63aOpt = document.getElementById('admin63aOpt');
+            const adminSockets3PBox = document.getElementById('adminSockets3PBox');
+
+            if (systemType === '1P') {
+                admin63aOpt.hidden = true;
+                admin63aOpt.disabled = true;
+                if (amperageSelect.value === '63') amperageSelect.value = '32';
+                adminSockets3PBox.classList.add('hidden');
+            } else {
+                admin63aOpt.hidden = false;
+                admin63aOpt.disabled = false;
+                adminSockets3PBox.classList.remove('hidden');
+            }
+
+            const amperage = amperageSelect.value;
+            const adminSockets1PElem = document.getElementById('adminSockets1P');
+            const adminSockets3PElem = document.getElementById('adminSockets3P');
+
+            const count1PSockets = parseInt(adminSockets1PElem.value) || 0;
+            const count3PSockets = systemType === '3P' ? (parseInt(adminSockets3PElem.value) || 0) : 0;
+
+            // Deshabilitar dinámicamente cargas cuando la cantidad de enchufes es 0
+            if (count3PSockets === 0) {
+                ['adminMotor3PQty','adminPump3PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.value = '0'; el.disabled = true; el.classList.add('opacity-50'); }
+                });
+            } else {
+                ['adminMotor3PQty','adminPump3PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.disabled = systemType === '1P'; el.classList.toggle('opacity-50', systemType === '1P'); }
+                });
+            }
+
+            if (count1PSockets === 0) {
+                ['adminMotor1PQty','adminPump1PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.value = '0'; el.disabled = true; el.classList.add('opacity-50'); }
+                });
+            } else {
+                ['adminMotor1PQty','adminPump1PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.disabled = false; el.classList.remove('opacity-50'); }
+                });
+            }
+
+            const motor1PQty = parseInt(document.getElementById('adminMotor1PQty').value) || 0;
+            const motor3PQty = parseInt(document.getElementById('adminMotor3PQty').value) || 0;
+            const pump1PQty = parseInt(document.getElementById('adminPump1PQty').value) || 0;
+            const pump3PQty = parseInt(document.getElementById('adminPump3PQty').value) || 0;
+
+            const loads = {
+                motor1PQty,
+                motor1PHPower: parseInt(document.getElementById('adminMotor1PHPower').value) || 1,
+                motor3PQty,
+                motor3PHPower: parseInt(document.getElementById('adminMotor3PHPower').value) || 1,
+                pump1PQty,
+                pump1PHPower: parseInt(document.getElementById('adminPump1PHPower').value) || 1,
+                pump3PQty,
+                pump3PHPower: parseInt(document.getElementById('adminPump3PHPower').value) || 1,
+                motorStartMethod: document.getElementById('adminMotorStartMethod') ? document.getElementById('adminMotorStartMethod').value : null,
+                startMethod: document.getElementById('adminStartMethod').value
+            };
+
+            const targetMarginVal = parseFloat(document.getElementById('targetMargin').value) || 35;
+            const targetMargin = targetMarginVal / 100;
+            document.getElementById('targetMarginLabel').innerText = targetMarginVal + "%";
+
+            const bom = getBOMList(systemType, amperage, 'NONE', '1', count1PSockets, count3PSockets, loads);
+
+            let totalCostNeto = 0;
+            bom.forEach(item => totalCostNeto += (item.price * item.qty));
+
+            const saleNeto = totalCostNeto / Math.max(0.01, (1 - targetMargin));
+            const saleWithTax = saleNeto * 1.19;
+            const profitNeto = saleNeto - totalCostNeto;
+            const rentMonthly = saleWithTax * 0.28;
+
+            document.getElementById('panelTitle').innerText = `Tablero ${systemType === '1P' ? 'Monofásico 220V' : 'Trifásico 380V'} - ${amperage}A`;
+            document.getElementById('totalCostNeto').innerText = formatCLP(totalCostNeto);
+            document.getElementById('salePriceWithTax').innerText = formatCLP(saleWithTax);
+            document.getElementById('profitNeto').innerText = formatCLP(profitNeto);
+            document.getElementById('rentMonthly').innerText = formatCLP(rentMonthly);
+
+            const bomTable = document.getElementById('bomTable');
+            bomTable.innerHTML = bom.map(item => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="p-2 font-medium text-slate-200">${item.name}</td>
+                    <td class="p-2 text-center text-amber-400 font-bold">${item.qty}</td>
+                    <td class="p-2 text-right">${formatCLP(item.price)}</td>
+                    <td class="p-2 text-right font-bold text-slate-100">${formatCLP(item.price * item.qty)}</td>
+                    <td class="p-2 text-center no-print">
+                        <a href="${item.link}" target="_blank" class="bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 px-2 py-1 rounded text-[10px] font-bold transition inline-flex items-center gap-1">
+                            <i class="fa-solid fa-cart-shopping text-[9px]"></i> Ver
+                        </a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ==========================================
+        // 2. LÓGICA DE COTIZADOR PÚBLICO
+        // ==========================================
         function updateQuote() {
             const systemType = document.querySelector('input[name="publicSystemType"]:checked').value;
-            const ampVal = document.querySelector('input[name="publicAmperage"]:checked').value;
+            const public63aWrapper = document.getElementById('public63aWrapper');
+            const publicSockets3PWrapper = document.getElementById('publicSockets3PWrapper');
+
+            if (systemType === '1P') {
+                public63aWrapper.classList.add('opacity-40', 'pointer-events-none');
+                document.getElementById('public63aInput').disabled = true;
+                if (document.querySelector('input[name="publicAmperage"]:checked').value === '63') {
+                    document.querySelector('input[name="publicAmperage"][value="32"]').checked = true;
+                }
+                publicSockets3PWrapper.classList.add('hidden');
+            } else {
+                public63aWrapper.classList.remove('opacity-40', 'pointer-events-none');
+                document.getElementById('public63aInput').disabled = false;
+                publicSockets3PWrapper.classList.remove('hidden');
+            }
+
+            const amperage = document.querySelector('input[name="publicAmperage"]:checked').value;
             const count1P = parseInt(document.getElementById('publicSockets1P').value) || 0;
             const count3P = systemType === '3P' ? (parseInt(document.getElementById('publicSockets3P').value) || 0) : 0;
             const mode = document.querySelector('input[name="publicServiceMode"]:checked').value;
 
-            // Captura de cargas y métodos de arranque independientes
+            // Bloquear cargas especiales si la cantidad de enchufes respectivos es 0
+            if (count3P === 0) {
+                ['publicMotor3PQty','publicPump3PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.value = '0'; el.disabled = true; el.classList.add('opacity-50'); }
+                });
+            } else {
+                ['publicMotor3PQty','publicPump3PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.disabled = systemType === '1P'; el.classList.toggle('opacity-50', systemType === '1P'); }
+                });
+            }
+
+            if (count1P === 0) {
+                ['publicMotor1PQty','publicPump1PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.value = '0'; el.disabled = true; el.classList.add('opacity-50'); }
+                });
+            } else {
+                ['publicMotor1PQty','publicPump1PQty'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.disabled = false; el.classList.remove('opacity-50'); }
+                });
+            }
+
             const loads = {
                 motor1PQty: parseInt(document.getElementById('publicMotor1PQty').value) || 0,
                 motor1PHPower: parseInt(document.getElementById('publicMotor1PHPower').value) || 1,
-                motor3PQty: systemType === '3P' ? (parseInt(document.getElementById('publicMotor3PQty').value) || 0) : 0,
+                motor3PQty: parseInt(document.getElementById('publicMotor3PQty').value) || 0,
                 motor3PHPower: parseInt(document.getElementById('publicMotor3PHPower').value) || 1,
-                motorStartMethod: document.getElementById('publicMotorStartMethod').value,
                 pump1PQty: parseInt(document.getElementById('publicPump1PQty').value) || 0,
                 pump1PHPower: parseInt(document.getElementById('publicPump1PHPower').value) || 1,
-                pump3PQty: systemType === '3P' ? (parseInt(document.getElementById('publicPump3PQty').value) || 0) : 0,
+                pump3PQty: parseInt(document.getElementById('publicPump3PQty').value) || 0,
                 pump3PHPower: parseInt(document.getElementById('publicPump3PHPower').value) || 1,
                 startMethod: document.getElementById('publicStartMethod').value
             };
 
-            // Visibilidad UI 3P
-            document.getElementById('publicSockets3PWrapper').style.display = systemType === '3P' ? 'block' : 'none';
-            document.getElementById('public63aWrapper').style.display = systemType === '3P' ? 'block' : 'none';
-            document.getElementById('publicMotor3PQty').disabled = systemType === '1P';
-            document.getElementById('publicPump3PQty').disabled = systemType === '1P';
-
-            const bom = getBOMList(systemType, ampVal, 'NONE', '1', count1P, count3P, loads);
+            const bom = getBOMList(systemType, amperage, 'NONE', '1', count1P, count3P, loads);
             let costNeto = 0;
-            bom.forEach(item => costNeto += (item.price * item.qty));
+            bom.forEach(i => costNeto += (i.price * i.qty));
 
-            const saleNeto = costNeto / (1 - 0.35);
+            const saleNeto = costNeto / 0.65;
             const saleWithTax = saleNeto * 1.19;
-            const rentPrice = saleWithTax * 0.28;
+            const rentMonthly = saleWithTax * 0.28;
 
-            const finalPrice = mode === 'BUY' ? saleWithTax : rentPrice;
+            const finalPrice = mode === 'BUY' ? saleWithTax : rentMonthly;
 
-            document.getElementById('resTitle').innerText = `Tablero ${systemType === '1P' ? 'Monofásico' : 'Trifásico'} ${ampVal}A`;
-            document.getElementById('resDesc').innerText = `${mode === 'BUY' ? 'Compra de equipo normado' : 'Arriendo mensual'} - IP65 RIC N°02`;
-            document.getElementById('resLabel').innerText = mode === 'BUY' ? 'Precio Total (+IVA)' : 'Arriendo Mensual (+IVA)';
+            document.getElementById('resTitle').innerText = `Tablero ${systemType === '1P' ? 'Monofásico' : 'Trifásico'} ${amperage}A`;
+            document.getElementById('resDesc').innerText = `${mode === 'BUY' ? 'Compra de equipo nuevo' : 'Arriendo mensual'} - Gabinete IP65 Hermético`;
+            document.getElementById('resLabel').innerText = mode === 'BUY' ? 'Precio (+IVA)' : 'Valor Mes (+IVA)';
             document.getElementById('resPrice').innerText = formatCLP(finalPrice);
 
-            // Generación de Resumen Técnico Estructurado
-            let summaryHTML = `
-                <ul class="list-disc pl-4 space-y-1 mt-1">
-                    <li><strong>Alimentación:</strong> ${systemType === '1P' ? 'Monofásica (220V)' : 'Trifásica (380V)'} - ${ampVal}A General.</li>
-                    <li><strong>Tomacorrientes:</strong> ${count1P}x 220V (16A)${systemType === '3P' ? `, ${count3P}x 380V (32A)` : ''}.</li>
-            `;
+            const summaryText = `Alimentación: ${systemType} | Amperaje: ${amperage}A | Enchufes: ${count1P}x 220V${systemType === '3P' ? ', ' + count3P + 'x 380V' : ''}`;
+            document.getElementById('publicTechnicalSummaryText').innerText = summaryText;
 
-            if (loads.motor1PQty > 0 || loads.motor3PQty > 0) {
-                summaryHTML += `<li><strong>Motores:</strong> ${loads.motor1PQty + loads.motor3PQty} unidad(es) - Control: ${loads.motorStartMethod}.</li>`;
-            }
-            if (loads.pump1PQty > 0 || loads.pump3PQty > 0) {
-                summaryHTML += `<li><strong>Bombas:</strong> ${loads.pump1PQty + loads.pump3PQty} unidad(es) - Control: ${loads.startMethod}.</li>`;
-            }
-            summaryHTML += `<li><strong>Protecciones:</strong> Diferenciales independientes por circuito (Cumplimiento RIC SEC).</li></ul>`;
+            const waMessage = encodeURIComponent(`Hola ELECTROFAENA, deseo cotizar formalmente un Tablero ${systemType} ${amperage}A. Modalidad: ${mode === 'BUY' ? 'Compra' : 'Arriendo'}. Configuración: ${summaryText}`);
+            document.getElementById('waOrderBtn').href = `https://wa.me/${WHATSAPP_NUM}?text=${waMessage}`;
 
-            document.getElementById('publicTechnicalSummaryText').innerHTML = summaryHTML;
-
-            // WhatsApp Link
-            const msg = `Hola ELECTROFAENA, quiero cotizar:\n- Tablero ${systemType} ${ampVal}A\n- Modalidad: ${mode === 'BUY' ? 'Compra' : 'Arriendo'}\n- Estimado: ${formatCLP(finalPrice)} +IVA`;
-            document.getElementById('waOrderBtn').href = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`;
+            update3DPreview(systemType, count1P, count3P);
         }
 
-        function updateCalculations() {
-            const systemType = document.querySelector('input[name="systemType"]:checked').value;
-            const ampSelect = document.getElementById('amperage');
-            const count1P = parseInt(document.getElementById('adminSockets1P').value) || 0;
-            const count3P = systemType === '3P' ? (parseInt(document.getElementById('adminSockets3P').value) || 0) : 0;
-            const margin = (parseFloat(document.getElementById('targetMargin').value) || 35) / 100;
+        // ==========================================
+        // 3. RENDERIZADOR 3D CON THREE.JS
+        // ==========================================
+        let scene, camera, renderer, controls, currentCabinet;
 
-            document.getElementById('admin63aOpt').hidden = systemType === '1P';
-            document.getElementById('adminSockets3PBox').style.display = systemType === '3P' ? 'block' : 'none';
+        function init3D() {
+            const wrapper = document.getElementById('panel3DWrapper');
+            if (!wrapper) return;
 
-            const loads = {
-                motor1PQty: parseInt(document.getElementById('adminMotor1PQty').value) || 0,
-                motor1PHPower: parseInt(document.getElementById('adminMotor1PHPower').value) || 1,
-                motor3PQty: systemType === '3P' ? (parseInt(document.getElementById('adminMotor3PQty').value) || 0) : 0,
-                motor3PHPower: parseInt(document.getElementById('adminMotor3PHPower').value) || 1,
-                motorStartMethod: document.getElementById('adminMotorStartMethod').value,
-                pump1PQty: parseInt(document.getElementById('adminPump1PQty').value) || 0,
-                pump1PHPower: parseInt(document.getElementById('adminPump1PHPower').value) || 1,
-                pump3PQty: systemType === '3P' ? (parseInt(document.getElementById('adminPump3PQty').value) || 0) : 0,
-                pump3PHPower: parseInt(document.getElementById('adminPump3PHPower').value) || 1,
-                startMethod: document.getElementById('adminStartMethod').value
-            };
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x020617);
 
-            const bom = getBOMList(systemType, ampSelect.value, 'NONE', '1', count1P, count3P, loads);
-            
-            let totalCostNeto = 0;
-            const tbody = document.getElementById('bomTable');
-            tbody.innerHTML = '';
+            camera = new THREE.PerspectiveCamera(45, wrapper.clientWidth / wrapper.clientHeight, 0.1, 1000);
+            camera.position.set(0, 0, 5);
 
-            bom.forEach(item => {
-                const subtotal = item.price * item.qty;
-                totalCostNeto += subtotal;
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="p-2">${item.name}</td>
-                        <td class="p-2 text-center">${item.qty}</td>
-                        <td class="p-2 text-right">${formatCLP(item.price)}</td>
-                        <td class="p-2 text-right font-bold">${formatCLP(subtotal)}</td>
-                        <td class="p-2 text-center no-print">${item.link !== '#' ? `<a href="${item.link}" target="_blank" class="text-blue-400 hover:underline"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : '-'}</td>
-                    </tr>
-                `;
-            });
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(wrapper.clientWidth, wrapper.clientHeight);
+            wrapper.appendChild(renderer.domElement);
 
-            const saleNeto = totalCostNeto / (1 - margin);
-            const saleWithTax = saleNeto * 1.19;
-            const profit = saleNeto - totalCostNeto;
+            if (THREE.OrbitControls) {
+                controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+            }
 
-            document.getElementById('totalCostNeto').innerText = formatCLP(totalCostNeto);
-            document.getElementById('salePriceWithTax').innerText = formatCLP(saleWithTax);
-            document.getElementById('profitNeto').innerText = formatCLP(profit);
-            document.getElementById('rentMonthly').innerText = formatCLP(saleWithTax * 0.28);
-            document.getElementById('targetMarginLabel').innerText = (margin * 100).toFixed(0) + '%';
+            const light1 = new THREE.DirectionalLight(0xffffff, 1);
+            light1.position.set(5, 5, 5);
+            scene.add(light1);
+
+            const light2 = new THREE.AmbientLight(0x404040, 2);
+            scene.add(light2);
+
+            document.getElementById('panel3DStatus').style.display = 'none';
+
+            function animate() {
+                requestAnimationFrame(animate);
+                if (controls) controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
         }
 
-        // Modales y Control de Acceso
-        function toggleGuaranteeModal() {
-            document.getElementById('guaranteeModal').classList.toggle('hidden');
+        function update3DPreview(systemType, count1P, count3P) {
+            if (!scene) return;
+
+            if (currentCabinet) scene.remove(currentCabinet);
+
+            currentCabinet = new THREE.Group();
+
+            // Gabinete
+            const cabinetGeo = new THREE.BoxGeometry(1.6, 2.2, 0.8);
+            const cabinetMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.5, roughness: 0.3 });
+            const cabinetMesh = new THREE.Mesh(cabinetGeo, cabinetMat);
+            currentCabinet.add(cabinetMesh);
+
+            // Puerta
+            const doorGeo = new THREE.BoxGeometry(1.5, 2.1, 0.05);
+            const doorMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.4, roughness: 0.4 });
+            const doorMesh = new THREE.Mesh(doorGeo, doorMat);
+            doorMesh.position.z = 0.41;
+            currentCabinet.add(doorMesh);
+
+            // Interruptor Principal
+            const switchGeo = new THREE.BoxGeometry(0.3, 0.3, 0.1);
+            const switchMat = new THREE.MeshStandardMaterial({ color: 0xd97706 });
+            const switchMesh = new THREE.Mesh(switchGeo, switchMat);
+            switchMesh.position.set(-0.4, 0.6, 0.44);
+            currentCabinet.add(switchMesh);
+
+            scene.add(currentCabinet);
+        }
+
+        // ==========================================
+        // 4. AUTENTICACIÓN Y MODALES
+        // ==========================================
+        function checkAdminKey(event) {
+            adminClicks++;
+            clearTimeout(adminTimer);
+            if (adminClicks >= 3) {
+                openLoginModal();
+                adminClicks = 0;
+            } else {
+                adminTimer = setTimeout(() => { adminClicks = 0; }, 1000);
+            }
         }
 
         function openLoginModal() {
@@ -892,8 +1140,8 @@
         }
 
         function submitAdminLogin() {
-            const val = document.getElementById('adminPassInput').value;
-            if (val === ADMIN_PIN) {
+            const pass = document.getElementById('adminPassInput').value;
+            if (pass === ADMIN_PIN) {
                 closeLoginModal();
                 document.getElementById('publicView').classList.add('hidden');
                 document.getElementById('publicHeader').classList.add('hidden');
@@ -906,23 +1154,17 @@
 
         function logoutAdmin() {
             document.getElementById('adminView').classList.add('hidden');
-            document.getElementById('publicView').classList.remove('hidden');
             document.getElementById('publicHeader').classList.remove('hidden');
+            document.getElementById('publicView').classList.remove('hidden');
         }
 
-        function checkAdminKey(e) {
-            adminClicks++;
-            if (adminTimer) clearTimeout(adminTimer);
-            adminTimer = setTimeout(() => { adminClicks = 0; }, 1000);
-            if (adminClicks >= 3) {
-                adminClicks = 0;
-                openLoginModal();
-            }
+        function toggleGuaranteeModal() {
+            document.getElementById('guaranteeModal').classList.toggle('hidden');
         }
 
-        // Inicialización
         window.onload = () => {
             updateQuote();
+            init3D();
         };
     </script>
 </body>
